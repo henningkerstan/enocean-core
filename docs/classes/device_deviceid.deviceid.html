@@ -1,0 +1,383 @@
+<!doctype html>
+<html class="default no-js">
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<title>DeviceId | enocean-core - v0.8.0</title>
+	<meta name="description" content="Documentation for enocean-core - v0.8.0">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="stylesheet" href="../assets/css/main.css">
+	<script async src="../assets/js/search.js" id="search-script"></script>
+</head>
+<body>
+<header>
+	<div class="tsd-page-toolbar">
+		<div class="container">
+			<div class="table-wrap">
+				<div class="table-cell" id="tsd-search" data-index="../assets/js/search.json" data-base="..">
+					<div class="field">
+						<label for="tsd-search-field" class="tsd-widget search no-caption">Search</label>
+						<input id="tsd-search-field" type="text" />
+					</div>
+					<ul class="results">
+						<li class="state loading">Preparing search index...</li>
+						<li class="state failure">The search index is not available</li>
+					</ul>
+					<a href="../index.html" class="title">enocean-core - v0.8.0</a>
+				</div>
+				<div class="table-cell" id="tsd-widgets">
+					<div id="tsd-filter">
+						<a href="#" class="tsd-widget options no-caption" data-toggle="options">Options</a>
+						<div class="tsd-filter-group">
+							<div class="tsd-select" id="tsd-filter-visibility">
+								<span class="tsd-select-label">All</span>
+								<ul class="tsd-select-list">
+									<li data-value="public">Public</li>
+									<li data-value="protected">Public/Protected</li>
+									<li data-value="private" class="selected">All</li>
+								</ul>
+							</div>
+							<input type="checkbox" id="tsd-filter-inherited" checked />
+							<label class="tsd-widget" for="tsd-filter-inherited">Inherited</label>
+							<input type="checkbox" id="tsd-filter-externals" checked />
+							<label class="tsd-widget" for="tsd-filter-externals">Externals</label>
+						</div>
+					</div>
+					<a href="#" class="tsd-widget menu no-caption" data-toggle="menu">Menu</a>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="tsd-page-title">
+		<div class="container">
+			<ul class="tsd-breadcrumb">
+				<li>
+					<a href="../modules.html">enocean-core - v0.8.0</a>
+				</li>
+				<li>
+					<a href="../modules/device_deviceid.html">device/DeviceId</a>
+				</li>
+				<li>
+					<a href="device_deviceid.deviceid.html">DeviceId</a>
+				</li>
+			</ul>
+			<h1>Class DeviceId</h1>
+		</div>
+	</div>
+</header>
+<div class="container container-main">
+	<div class="row">
+		<div class="col-8 col-content">
+			<section class="tsd-panel tsd-comment">
+				<div class="tsd-comment tsd-typography">
+					<div class="lead">
+						<p>EnOcean uses four byte (32 bit) addresses to identify devices. This class
+						implements these addresses.</p>
+					</div>
+					<a href="#allowed-adresses-for-sending" id="allowed-adresses-for-sending" style="color: inherit; text-decoration: none;">
+						<h2>Allowed adresses for sending</h2>
+					</a>
+					<p>Each EnOcean device has a unique ID (called <em>chip ID</em>) which it can use
+						for sending telegrams. Alternatively, EnOcean gateways can also use a range
+						of 128 consecutive addresses for sending, starting at the so-called
+						<em>base ID</em> of the gateway. A gateway&#39;s <em>base ID</em> is a four byte address in
+						the range FF:80:00:00 to FF:FF:FF:80. The base ID is a predefined address,
+						which can be changed by the user only a few times (at most 10 times for the
+						TCM310 chip). The allowed addresses for sending a telegram are thus the
+					following 129 addresses:</p>
+					<ul>
+						<li>chip ID (= device ID),</li>
+						<li>base ID,</li>
+						<li>base ID + 1,</li>
+						<li>base ID + 2,</li>
+						<li>...</li>
+						<li>base ID + 126, and</li>
+						<li>base ID + 127.</li>
+					</ul>
+					<p>All other addresses must not be used for sending (and will be rejected by
+						official EnOcean modules). This is meant as a basic security feature. Have a
+					look at the EnOcean <a href="https://www.enocean.com/en/support/knowledge-base/knowledge-base-doku/enoceansystemspecification:issue:what_is_a_base_id/">knowledge base</a> for the official explanation of the differences between chip ID and base IDs.</p>
+					<a href="#relative-ids" id="relative-ids" style="color: inherit; text-decoration: none;">
+						<h2>Relative IDs</h2>
+					</a>
+					<p>Relative IDs are placeholders for one of the allowed sending addresses. They
+						can be used to implement something like &quot;when sending this telegram, use the
+						sender&#39;s chip id&quot; or &quot;when sending this telegram, use the sender&#39;s base id +
+						17&quot;. Thus they do not correspond to an actual address but are relative to
+						the sender&#39;s chip ID/base ID. Prior to sending the telegram (or to
+						converting it to an ESP3 packet), it must be transformed to the actual four
+					byte address.</p>
+				</div>
+			</section>
+			<section class="tsd-panel tsd-hierarchy">
+				<h3>Hierarchy</h3>
+				<ul class="tsd-hierarchy">
+					<li>
+						<span class="target">DeviceId</span>
+					</li>
+				</ul>
+			</section>
+			<section class="tsd-panel-group tsd-index-group">
+				<h2>Index</h2>
+				<section class="tsd-panel tsd-index-panel">
+					<div class="tsd-index-content">
+						<section class="tsd-index-section ">
+							<h3>Accessors</h3>
+							<ul class="tsd-index-list">
+								<li class="tsd-kind-get-signature tsd-parent-kind-class tsd-is-static"><a href="device_deviceid.deviceid.html#broadcast" class="tsd-kind-icon">broadcast</a></li>
+								<li class="tsd-kind-get-signature tsd-parent-kind-class tsd-is-static"><a href="device_deviceid.deviceid.html#gatewayselectssender" class="tsd-kind-icon">gateway<wbr>Selects<wbr>Sender</a></li>
+							</ul>
+						</section>
+						<section class="tsd-index-section ">
+							<h3>Methods</h3>
+							<ul class="tsd-index-list">
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="device_deviceid.deviceid.html#tojson" class="tsd-kind-icon">toJSON</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="device_deviceid.deviceid.html#tonumber" class="tsd-kind-icon">to<wbr>Number</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="device_deviceid.deviceid.html#tostring" class="tsd-kind-icon">to<wbr>String</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-static"><a href="device_deviceid.deviceid.html#fromnumber" class="tsd-kind-icon">from<wbr>Number</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-static"><a href="device_deviceid.deviceid.html#fromstring" class="tsd-kind-icon">from<wbr>String</a></li>
+							</ul>
+						</section>
+					</div>
+				</section>
+			</section>
+			<section class="tsd-panel-group tsd-member-group ">
+				<h2>Accessors</h2>
+				<section class="tsd-panel tsd-member tsd-kind-get-signature tsd-parent-kind-class tsd-is-static">
+					<a name="broadcast" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagStatic">Static</span> broadcast</h3>
+					<ul class="tsd-signatures tsd-kind-get-signature tsd-parent-kind-class tsd-is-static">
+						<li class="tsd-signature tsd-kind-icon"><span class="tsd-signature-symbol">get</span> broadcast<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="device_deviceid.deviceid.html" class="tsd-signature-type" data-tsd-kind="Class">DeviceId</a></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Shortcut for the broadcast address FF:FF:FF:FF.</p>
+								</div>
+							</div>
+							<h4 class="tsd-returns-title">Returns <a href="device_deviceid.deviceid.html" class="tsd-signature-type" data-tsd-kind="Class">DeviceId</a></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-get-signature tsd-parent-kind-class tsd-is-static">
+					<a name="gatewayselectssender" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagStatic">Static</span> gateway<wbr>Selects<wbr>Sender</h3>
+					<ul class="tsd-signatures tsd-kind-get-signature tsd-parent-kind-class tsd-is-static">
+						<li class="tsd-signature tsd-kind-icon"><span class="tsd-signature-symbol">get</span> gatewaySelectsSender<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="device_deviceid.deviceid.html" class="tsd-signature-type" data-tsd-kind="Class">DeviceId</a></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Adress used to indicate that the sending gateway shall select the appropriate sender id.</p>
+								</div>
+							</div>
+							<h4 class="tsd-returns-title">Returns <a href="device_deviceid.deviceid.html" class="tsd-signature-type" data-tsd-kind="Class">DeviceId</a></h4>
+						</li>
+					</ul>
+				</section>
+			</section>
+			<section class="tsd-panel-group tsd-member-group ">
+				<h2>Methods</h2>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+					<a name="tojson" class="tsd-anchor"></a>
+					<h3>toJSON</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon">toJSON<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>A string representation of the EnOcean ID. IDs are represented as
+										string of the form <code>XX:XX:XX:XX</code> with colons separating the four bytes in
+										big-endian ordering. Each of the bytes is given as 2-digit upper case
+									hexadecimal string.</p>
+								</div>
+							</div>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">string</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+					<a name="tonumber" class="tsd-anchor"></a>
+					<h3>to<wbr>Number</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon">to<wbr>Number<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Interprets the four bytes as number using big-endian ordering.</p>
+								</div>
+							</div>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">number</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+					<a name="tostring" class="tsd-anchor"></a>
+					<h3>to<wbr>String</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon">to<wbr>String<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>A string representation of the EnOcean ID. IDs are represented as
+										string of the form <code>XX:XX:XX:XX</code> with colons separating the four bytes in
+										big-endian ordering. Each of the bytes is given as 2-digit upper case
+									hexadecimal string.</p>
+								</div>
+							</div>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">string</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-static">
+					<a name="fromnumber" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagStatic">Static</span> from<wbr>Number</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-static">
+						<li class="tsd-signature tsd-kind-icon">from<wbr>Number<span class="tsd-signature-symbol">(</span>id<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="device_deviceid.deviceid.html" class="tsd-signature-type" data-tsd-kind="Class">DeviceId</a></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Construct a DeviceId from the supplied number.</p>
+								</div>
+							</div>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>id: <span class="tsd-signature-type">number</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>An integer to be interpreted as DeviceId. Valid range 0-4294967295 (=0xFFFFFFFF). Note that 0 (=0x00000000) has a special meaning if used as sender address: it will be replaced by the gateway with a valid address.</p>
+									</div>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <a href="device_deviceid.deviceid.html" class="tsd-signature-type" data-tsd-kind="Class">DeviceId</a></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-static">
+					<a name="fromstring" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagStatic">Static</span> from<wbr>String</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-static">
+						<li class="tsd-signature tsd-kind-icon">from<wbr>String<span class="tsd-signature-symbol">(</span>idString<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="device_deviceid.deviceid.html" class="tsd-signature-type" data-tsd-kind="Class">DeviceId</a></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Construct a DeviceId. Interprets the supplied string as id. Currently only
+										one format is allowed: &quot;X:X:X:X&quot; with each X being one or two hexadecimal
+									digits.</p>
+								</div>
+							</div>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>idString: <span class="tsd-signature-type">string</span></h5>
+									<div class="tsd-comment tsd-typography">
+									</div>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <a href="device_deviceid.deviceid.html" class="tsd-signature-type" data-tsd-kind="Class">DeviceId</a></h4>
+						</li>
+					</ul>
+				</section>
+			</section>
+		</div>
+		<div class="col-4 col-menu menu-sticky-wrap menu-highlight">
+			<nav class="tsd-navigation primary">
+				<ul>
+					<li class=" ">
+						<a href="../modules.html">Exports</a>
+					</li>
+					<li class="current tsd-kind-module">
+						<a href="../modules/device_deviceid.html">device/<wbr>Device<wbr>Id</a>
+					</li>
+				</ul>
+			</nav>
+			<nav class="tsd-navigation secondary menu-sticky">
+				<ul class="before-current">
+				</ul>
+				<ul class="current">
+					<li class="current tsd-kind-class tsd-parent-kind-module">
+						<a href="device_deviceid.deviceid.html" class="tsd-kind-icon">Device<wbr>Id</a>
+						<ul>
+							<li class=" tsd-kind-get-signature tsd-parent-kind-class tsd-is-static">
+								<a href="device_deviceid.deviceid.html#broadcast" class="tsd-kind-icon">broadcast</a>
+							</li>
+							<li class=" tsd-kind-get-signature tsd-parent-kind-class tsd-is-static">
+								<a href="device_deviceid.deviceid.html#gatewayselectssender" class="tsd-kind-icon">gateway<wbr>Selects<wbr>Sender</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class">
+								<a href="device_deviceid.deviceid.html#tojson" class="tsd-kind-icon">toJSON</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class">
+								<a href="device_deviceid.deviceid.html#tonumber" class="tsd-kind-icon">to<wbr>Number</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class">
+								<a href="device_deviceid.deviceid.html#tostring" class="tsd-kind-icon">to<wbr>String</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-static">
+								<a href="device_deviceid.deviceid.html#fromnumber" class="tsd-kind-icon">from<wbr>Number</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-static">
+								<a href="device_deviceid.deviceid.html#fromstring" class="tsd-kind-icon">from<wbr>String</a>
+							</li>
+						</ul>
+					</li>
+				</ul>
+				<ul class="after-current">
+				</ul>
+			</nav>
+		</div>
+	</div>
+</div>
+<footer class="with-border-bottom">
+	<div class="container">
+		<h2>Legend</h2>
+		<div class="tsd-legend-group">
+			<ul class="tsd-legend">
+				<li class="tsd-kind-class"><span class="tsd-kind-icon">Class</span></li>
+				<li class="tsd-kind-method tsd-parent-kind-class"><span class="tsd-kind-icon">Method</span></li>
+			</ul>
+			<ul class="tsd-legend">
+				<li class="tsd-kind-enum"><span class="tsd-kind-icon">Enumeration</span></li>
+			</ul>
+			<ul class="tsd-legend">
+				<li class="tsd-kind-interface"><span class="tsd-kind-icon">Interface</span></li>
+			</ul>
+			<ul class="tsd-legend">
+				<li class="tsd-kind-method tsd-parent-kind-class tsd-is-static"><span class="tsd-kind-icon">Static method</span></li>
+			</ul>
+		</div>
+	</div>
+</footer>
+<div class="container tsd-generator">
+	<p>Generated using <a href="https://typedoc.org/" target="_blank">TypeDoc</a></p>
+</div>
+<div class="overlay"></div>
+<script src="../assets/js/main.js"></script>
+</body>
+</html>

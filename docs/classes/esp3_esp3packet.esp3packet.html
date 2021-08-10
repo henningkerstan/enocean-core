@@ -1,0 +1,437 @@
+<!doctype html>
+<html class="default no-js">
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<title>ESP3Packet | enocean-core - v0.8.0</title>
+	<meta name="description" content="Documentation for enocean-core - v0.8.0">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="stylesheet" href="../assets/css/main.css">
+	<script async src="../assets/js/search.js" id="search-script"></script>
+</head>
+<body>
+<header>
+	<div class="tsd-page-toolbar">
+		<div class="container">
+			<div class="table-wrap">
+				<div class="table-cell" id="tsd-search" data-index="../assets/js/search.json" data-base="..">
+					<div class="field">
+						<label for="tsd-search-field" class="tsd-widget search no-caption">Search</label>
+						<input id="tsd-search-field" type="text" />
+					</div>
+					<ul class="results">
+						<li class="state loading">Preparing search index...</li>
+						<li class="state failure">The search index is not available</li>
+					</ul>
+					<a href="../index.html" class="title">enocean-core - v0.8.0</a>
+				</div>
+				<div class="table-cell" id="tsd-widgets">
+					<div id="tsd-filter">
+						<a href="#" class="tsd-widget options no-caption" data-toggle="options">Options</a>
+						<div class="tsd-filter-group">
+							<div class="tsd-select" id="tsd-filter-visibility">
+								<span class="tsd-select-label">All</span>
+								<ul class="tsd-select-list">
+									<li data-value="public">Public</li>
+									<li data-value="protected">Public/Protected</li>
+									<li data-value="private" class="selected">All</li>
+								</ul>
+							</div>
+							<input type="checkbox" id="tsd-filter-inherited" checked />
+							<label class="tsd-widget" for="tsd-filter-inherited">Inherited</label>
+							<input type="checkbox" id="tsd-filter-externals" checked />
+							<label class="tsd-widget" for="tsd-filter-externals">Externals</label>
+						</div>
+					</div>
+					<a href="#" class="tsd-widget menu no-caption" data-toggle="menu">Menu</a>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="tsd-page-title">
+		<div class="container">
+			<ul class="tsd-breadcrumb">
+				<li>
+					<a href="../modules.html">enocean-core - v0.8.0</a>
+				</li>
+				<li>
+					<a href="../modules/esp3_esp3packet.html">esp3/ESP3Packet</a>
+				</li>
+				<li>
+					<a href="esp3_esp3packet.esp3packet.html">ESP3Packet</a>
+				</li>
+			</ul>
+			<h1>Class ESP3Packet</h1>
+		</div>
+	</div>
+</header>
+<div class="container container-main">
+	<div class="row">
+		<div class="col-8 col-content">
+			<section class="tsd-panel tsd-comment">
+				<div class="tsd-comment tsd-typography">
+					<div class="lead">
+						<p>The <em>EnOcean Serial Protocol 3 (ESP3)</em> uses the <em>ESP3 packet</em> as main (outer) data structure. This class implements this data structure as a wrapper from/to a buffer (containing the serialization received/to be sent a serial port).</p>
+					</div>
+					<p>An ESP3 packet consists of three major parts:</p>
+					<ul>
+						<li>a header (only partly accessible in this class, see below for an explanation),</li>
+						<li>a data part, and</li>
+						<li>an optional data part.</li>
+					</ul>
+					<p>The header and the two data part&#39;s integrity is safeguarded by an 8-bit cyclic redundancy check (CRC8).</p>
+					<p>The byte-wise representation of the ESP3 packet structure is given in the following table.</p>
+					<table>
+						<thead>
+							<tr>
+								<th>Offset</th>
+								<th>Byte(s)</th>
+								<th>Content</th>
+							</tr>
+						</thead>
+						<tbody><tr>
+								<td>0</td>
+								<td>1</td>
+								<td>sync byte (= 0x55)</td>
+							</tr>
+							<tr>
+								<td>1</td>
+								<td>2</td>
+								<td>header: length (x) in bytes of subsequent data</td>
+							</tr>
+							<tr>
+								<td>3</td>
+								<td>1</td>
+								<td>header: length (y) in bytes of subsequent optional data</td>
+							</tr>
+							<tr>
+								<td>4</td>
+								<td>1</td>
+								<td>header: packet type</td>
+							</tr>
+							<tr>
+								<td>5</td>
+								<td>1</td>
+								<td>CRC8 of header (i.e. of preceeding four bytes)</td>
+							</tr>
+							<tr>
+								<td>6</td>
+								<td>x</td>
+								<td>data</td>
+							</tr>
+							<tr>
+								<td>6+x</td>
+								<td>y</td>
+								<td>optional data</td>
+							</tr>
+							<tr>
+								<td>6+x+y</td>
+								<td>1</td>
+								<td>CRC8 of data and optional data (i.e. of preceeding x+y bytes)</td>
+							</tr>
+					</tbody></table>
+					<p>Note that the (internal) byte order is big-endian; this needs to be taken into account to decode/encode multibyte fields like e.g. the two byte field <em>length (x) of subsequent data</em> mentioned in the table above.</p>
+					<p>This class only stores the truly variable parts of this data structure, i.e. it only stores</p>
+					<ul>
+						<li>header: packet type,</li>
+						<li>data, and</li>
+						<li>optional data.</li>
+					</ul>
+					<p>All other data is either fixed (sync byte) or can (and will) be computed from these values on demand. This happens when constructing this class from a buffer or when transforming the class to a buffer.</p>
+				</div>
+			</section>
+			<section class="tsd-panel tsd-hierarchy">
+				<h3>Hierarchy</h3>
+				<ul class="tsd-hierarchy">
+					<li>
+						<span class="target">ESP3Packet</span>
+					</li>
+				</ul>
+			</section>
+			<section class="tsd-panel-group tsd-index-group">
+				<h2>Index</h2>
+				<section class="tsd-panel tsd-index-panel">
+					<div class="tsd-index-content">
+						<section class="tsd-index-section ">
+							<h3>Constructors</h3>
+							<ul class="tsd-index-list">
+								<li class="tsd-kind-constructor tsd-parent-kind-class"><a href="esp3_esp3packet.esp3packet.html#constructor" class="tsd-kind-icon">constructor</a></li>
+							</ul>
+						</section>
+						<section class="tsd-index-section ">
+							<h3>Properties</h3>
+							<ul class="tsd-index-list">
+								<li class="tsd-kind-property tsd-parent-kind-class"><a href="esp3_esp3packet.esp3packet.html#data" class="tsd-kind-icon">data</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-class"><a href="esp3_esp3packet.esp3packet.html#optionaldata" class="tsd-kind-icon">optional<wbr>Data</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-class"><a href="esp3_esp3packet.esp3packet.html#packettype" class="tsd-kind-icon">packet<wbr>Type</a></li>
+							</ul>
+						</section>
+						<section class="tsd-index-section ">
+							<h3>Methods</h3>
+							<ul class="tsd-index-list">
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="esp3_esp3packet.esp3packet.html#tobase64" class="tsd-kind-icon">to<wbr>Base64</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="esp3_esp3packet.esp3packet.html#tobuffer" class="tsd-kind-icon">to<wbr>Buffer</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="esp3_esp3packet.esp3packet.html#tostring" class="tsd-kind-icon">to<wbr>String</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-static"><a href="esp3_esp3packet.esp3packet.html#frombuffer" class="tsd-kind-icon">from<wbr>Buffer</a></li>
+							</ul>
+						</section>
+					</div>
+				</section>
+			</section>
+			<section class="tsd-panel-group tsd-member-group ">
+				<h2>Constructors</h2>
+				<section class="tsd-panel tsd-member tsd-kind-constructor tsd-parent-kind-class">
+					<a name="constructor" class="tsd-anchor"></a>
+					<h3>constructor</h3>
+					<ul class="tsd-signatures tsd-kind-constructor tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon">new ESP3<wbr>Packet<span class="tsd-signature-symbol">(</span>packetType<span class="tsd-signature-symbol">: </span><a href="../enums/esp3_esp3packettypes.esp3packettypes.html" class="tsd-signature-type" data-tsd-kind="Enumeration">ESP3PacketTypes</a>, data<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Buffer</span>, optionalData<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Buffer</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="esp3_esp3packet.esp3packet.html" class="tsd-signature-type" data-tsd-kind="Class">ESP3Packet</a></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Construct an ESP3 packet from the minimally required data.</p>
+								</div>
+							</div>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>packetType: <a href="../enums/esp3_esp3packettypes.esp3packettypes.html" class="tsd-signature-type" data-tsd-kind="Enumeration">ESP3PacketTypes</a></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>The packet type.</p>
+									</div>
+								</li>
+								<li>
+									<h5>data: <span class="tsd-signature-type">Buffer</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>The data as Node.js <a href="https://nodejs.org/api/buffer.html">Buffer</a>.</p>
+									</div>
+								</li>
+								<li>
+									<h5>optionalData: <span class="tsd-signature-type">Buffer</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>The optional data as Node.js <a href="https://nodejs.org/api/buffer.html">Buffer</a>.</p>
+									</div>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <a href="esp3_esp3packet.esp3packet.html" class="tsd-signature-type" data-tsd-kind="Class">ESP3Packet</a></h4>
+						</li>
+					</ul>
+				</section>
+			</section>
+			<section class="tsd-panel-group tsd-member-group ">
+				<h2>Properties</h2>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class">
+					<a name="data" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagReadonly">Readonly</span> data</h3>
+					<div class="tsd-signature tsd-kind-icon">data<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">Buffer</span></div>
+					<aside class="tsd-sources">
+					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>The data part of the packet as Node.js <a href="https://nodejs.org/api/buffer.html">Buffer</a>.</p>
+						</div>
+					</div>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class">
+					<a name="optionaldata" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagReadonly">Readonly</span> optional<wbr>Data</h3>
+					<div class="tsd-signature tsd-kind-icon">optional<wbr>Data<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">Buffer</span></div>
+					<aside class="tsd-sources">
+					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>The optional data part of the packet as Node.js <a href="https://nodejs.org/api/buffer.html">Buffer</a>.</p>
+						</div>
+					</div>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class">
+					<a name="packettype" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagReadonly">Readonly</span> packet<wbr>Type</h3>
+					<div class="tsd-signature tsd-kind-icon">packet<wbr>Type<span class="tsd-signature-symbol">:</span> <a href="../enums/esp3_esp3packettypes.esp3packettypes.html" class="tsd-signature-type" data-tsd-kind="Enumeration">ESP3PacketTypes</a><span class="tsd-signature-symbol"> = ...</span></div>
+					<aside class="tsd-sources">
+					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>The packet&#39;s type (see <a href="../enums/esp3_esp3packettypes.esp3packettypes.html">ESP3PacketTypes</a> for a list of supported types.)</p>
+						</div>
+					</div>
+				</section>
+			</section>
+			<section class="tsd-panel-group tsd-member-group ">
+				<h2>Methods</h2>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+					<a name="tobase64" class="tsd-anchor"></a>
+					<h3>to<wbr>Base64</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon">to<wbr>Base64<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+							</aside>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">string</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+					<a name="tobuffer" class="tsd-anchor"></a>
+					<h3>to<wbr>Buffer</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon">to<wbr>Buffer<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Buffer</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Convert data to a Node.js buffer. Automatically adds all required parts
+									(sync byte and checksums).</p>
+								</div>
+							</div>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Buffer</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+					<a name="tostring" class="tsd-anchor"></a>
+					<h3>to<wbr>String</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon">to<wbr>String<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Returns a one-line string of the form &quot;ESP3Packet (TYPE): DATA;OPTIONAL.&quot; where</p>
+									<ul>
+										<li>TYPE is the name of the packet type,</li>
+										<li>DATA is a hexadecimal representation of the packet&#39;s data, and</li>
+										<li>OPTIONAL is a hexadecimal representation of the packet&#39;s optional data.</li>
+									</ul>
+								</div>
+							</div>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">string</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-static">
+					<a name="frombuffer" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagStatic">Static</span> from<wbr>Buffer</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-static">
+						<li class="tsd-signature tsd-kind-icon">from<wbr>Buffer<span class="tsd-signature-symbol">(</span>buffer<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Buffer</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="esp3_esp3packet.esp3packet.html" class="tsd-signature-type" data-tsd-kind="Class">ESP3Packet</a></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Interpret the supplied buffer as an ESP3 packet.</p>
+								</div>
+								<p>This will fail and throw an error if:</p>
+								<ul>
+									<li>the buffer is too short (&lt; 8 bytes),</li>
+									<li>the first byte is not the sync byte (0x55),</li>
+									<li>the header checksum is wrong,</li>
+									<li>the buffer is too small to contain the data and optional data specified in the header, or</li>
+									<li>the data checksum is wrong.</li>
+								</ul>
+							</div>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>buffer: <span class="tsd-signature-type">Buffer</span></h5>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <a href="esp3_esp3packet.esp3packet.html" class="tsd-signature-type" data-tsd-kind="Class">ESP3Packet</a></h4>
+						</li>
+					</ul>
+				</section>
+			</section>
+		</div>
+		<div class="col-4 col-menu menu-sticky-wrap menu-highlight">
+			<nav class="tsd-navigation primary">
+				<ul>
+					<li class=" ">
+						<a href="../modules.html">Exports</a>
+					</li>
+					<li class="current tsd-kind-module">
+						<a href="../modules/esp3_esp3packet.html">esp3/ESP3<wbr>Packet</a>
+					</li>
+				</ul>
+			</nav>
+			<nav class="tsd-navigation secondary menu-sticky">
+				<ul class="before-current">
+				</ul>
+				<ul class="current">
+					<li class="current tsd-kind-class tsd-parent-kind-module">
+						<a href="esp3_esp3packet.esp3packet.html" class="tsd-kind-icon">ESP3<wbr>Packet</a>
+						<ul>
+							<li class=" tsd-kind-constructor tsd-parent-kind-class">
+								<a href="esp3_esp3packet.esp3packet.html#constructor" class="tsd-kind-icon">constructor</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-class">
+								<a href="esp3_esp3packet.esp3packet.html#data" class="tsd-kind-icon">data</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-class">
+								<a href="esp3_esp3packet.esp3packet.html#optionaldata" class="tsd-kind-icon">optional<wbr>Data</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-class">
+								<a href="esp3_esp3packet.esp3packet.html#packettype" class="tsd-kind-icon">packet<wbr>Type</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class">
+								<a href="esp3_esp3packet.esp3packet.html#tobase64" class="tsd-kind-icon">to<wbr>Base64</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class">
+								<a href="esp3_esp3packet.esp3packet.html#tobuffer" class="tsd-kind-icon">to<wbr>Buffer</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class">
+								<a href="esp3_esp3packet.esp3packet.html#tostring" class="tsd-kind-icon">to<wbr>String</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-static">
+								<a href="esp3_esp3packet.esp3packet.html#frombuffer" class="tsd-kind-icon">from<wbr>Buffer</a>
+							</li>
+						</ul>
+					</li>
+				</ul>
+				<ul class="after-current">
+				</ul>
+			</nav>
+		</div>
+	</div>
+</div>
+<footer class="with-border-bottom">
+	<div class="container">
+		<h2>Legend</h2>
+		<div class="tsd-legend-group">
+			<ul class="tsd-legend">
+				<li class="tsd-kind-class"><span class="tsd-kind-icon">Class</span></li>
+				<li class="tsd-kind-constructor tsd-parent-kind-class"><span class="tsd-kind-icon">Constructor</span></li>
+				<li class="tsd-kind-property tsd-parent-kind-class"><span class="tsd-kind-icon">Property</span></li>
+				<li class="tsd-kind-method tsd-parent-kind-class"><span class="tsd-kind-icon">Method</span></li>
+			</ul>
+			<ul class="tsd-legend">
+				<li class="tsd-kind-enum"><span class="tsd-kind-icon">Enumeration</span></li>
+			</ul>
+			<ul class="tsd-legend">
+				<li class="tsd-kind-interface"><span class="tsd-kind-icon">Interface</span></li>
+			</ul>
+			<ul class="tsd-legend">
+				<li class="tsd-kind-method tsd-parent-kind-class tsd-is-static"><span class="tsd-kind-icon">Static method</span></li>
+			</ul>
+		</div>
+	</div>
+</footer>
+<div class="container tsd-generator">
+	<p>Generated using <a href="https://typedoc.org/" target="_blank">TypeDoc</a></p>
+</div>
+<div class="overlay"></div>
+<script src="../assets/js/main.js"></script>
+</body>
+</html>

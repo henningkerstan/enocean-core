@@ -1,0 +1,1038 @@
+<!doctype html>
+<html class="default no-js">
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<title>Gateway | enocean-core - v0.8.0</title>
+	<meta name="description" content="Documentation for enocean-core - v0.8.0">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="stylesheet" href="../assets/css/main.css">
+	<script async src="../assets/js/search.js" id="search-script"></script>
+</head>
+<body>
+<header>
+	<div class="tsd-page-toolbar">
+		<div class="container">
+			<div class="table-wrap">
+				<div class="table-cell" id="tsd-search" data-index="../assets/js/search.json" data-base="..">
+					<div class="field">
+						<label for="tsd-search-field" class="tsd-widget search no-caption">Search</label>
+						<input id="tsd-search-field" type="text" />
+					</div>
+					<ul class="results">
+						<li class="state loading">Preparing search index...</li>
+						<li class="state failure">The search index is not available</li>
+					</ul>
+					<a href="../index.html" class="title">enocean-core - v0.8.0</a>
+				</div>
+				<div class="table-cell" id="tsd-widgets">
+					<div id="tsd-filter">
+						<a href="#" class="tsd-widget options no-caption" data-toggle="options">Options</a>
+						<div class="tsd-filter-group">
+							<div class="tsd-select" id="tsd-filter-visibility">
+								<span class="tsd-select-label">All</span>
+								<ul class="tsd-select-list">
+									<li data-value="public">Public</li>
+									<li data-value="protected">Public/Protected</li>
+									<li data-value="private" class="selected">All</li>
+								</ul>
+							</div>
+							<input type="checkbox" id="tsd-filter-inherited" checked />
+							<label class="tsd-widget" for="tsd-filter-inherited">Inherited</label>
+							<input type="checkbox" id="tsd-filter-externals" checked />
+							<label class="tsd-widget" for="tsd-filter-externals">Externals</label>
+						</div>
+					</div>
+					<a href="#" class="tsd-widget menu no-caption" data-toggle="menu">Menu</a>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="tsd-page-title">
+		<div class="container">
+			<ul class="tsd-breadcrumb">
+				<li>
+					<a href="../modules.html">enocean-core - v0.8.0</a>
+				</li>
+				<li>
+					<a href="../modules/gateway_gateway.html">gateway/Gateway</a>
+				</li>
+				<li>
+					<a href="gateway_gateway.gateway.html">Gateway</a>
+				</li>
+			</ul>
+			<h1>Class Gateway</h1>
+		</div>
+	</div>
+</header>
+<div class="container container-main">
+	<div class="row">
+		<div class="col-8 col-content">
+			<section class="tsd-panel tsd-comment">
+				<div class="tsd-comment tsd-typography">
+					<div class="lead">
+						<p>This class implements the core functionality of an EnOcean gateway.
+						Currently it has only been tested with an EnOcean TCM310 module.</p>
+					</div>
+					<a href="#initialization" id="initialization" style="color: inherit; text-decoration: none;">
+						<h2>Initialization</h2>
+					</a>
+					<p>The constructor of this class is private. To obtain an instance, the only
+					currently available option is to use the static function <a href="gateway_gateway.gateway.html#connecttoserialport">connectToSerialPort</a>.</p>
+					<a href="#automatic-interpretation-of-incoming-data" id="automatic-interpretation-of-incoming-data" style="color: inherit; text-decoration: none;">
+						<h2>Automatic interpretation of incoming data</h2>
+					</a>
+					<p>This class automatically interprets all incoming data as far as possible. The
+					receiving chain is outlined below.</p>
+					<p>Trigger: Data is received on the serial port.</p>
+					<ol>
+						<li><p>Try to interpret the received data as ESP3 packet:</p>
+							<ul>
+								<li>on failure: do nothing and stop,</li>
+								<li>on success: call all listeners registered by <a href="gateway_gateway.gateway.html#onreceivedesp3packet">onReceivedESP3Packet</a> and
+								proceed to step 2.</li>
+							</ul>
+						</li>
+						<li><p>Try to interpret the ESP3 packet:</p>
+							<ul>
+								<li>on failure: call all listeners registered by
+								<a href="gateway_gateway.gateway.html#onreceivedesp3packetunfamiliar">onReceivedESP3PacketUnfamiliar</a> and stop,</li>
+								<li>on successful interpretation of a response telegram: process response
+								internally and stop,</li>
+								<li>on successful interpretation as ERP1 telegram: call all listeners
+									registered by <a href="gateway_gateway.gateway.html#onreceivederp1telegram">onReceivedERP1Telegram</a> and
+								proceed to step 3.</li>
+							</ul>
+						</li>
+						<li><p>Try to interpret the ERP1 telegram:</p>
+							<ul>
+								<li>on failure: call all listeners registered by
+								<a href="gateway_gateway.gateway.html#onreceivederp1telegramunfamiliar">onReceivedERP1TelegramUnfamiliar</a> and stop,</li>
+								<li>on successful interpretation of a teach in message (UTE / 4BS): handle
+									teach in internally (if learn mode is enabled) or discard message (if
+								learn mode is disabled) and stop,</li>
+								<li>on recognition of a data telegram (RPS/1BS/4BS/VLD), proceed to step 4</li>
+							</ul>
+						</li>
+						<li><p>Identify the sender (check if the device is known):</p>
+							<ul>
+								<li>on failure: call all listeners registered by
+									<a href="gateway_gateway.gateway.html#onreceivederp1telegramunfamiliar">onReceivedERP1TelegramUnfamiliar</a> with reason
+								{@link ERP1TelegramParsingErrors.DeviceUnknown} and stop,</li>
+								<li>on success, proceed to step 5.</li>
+							</ul>
+						</li>
+						<li><p>Get the EEP:</p>
+							<ul>
+								<li>on failure: call all listeners registered by
+									<a href="gateway_gateway.gateway.html#onreceivederp1telegramunfamiliar">onReceivedERP1TelegramUnfamiliar</a> with reason
+								{@link ERP1TelegramParsingErrors.EEPUnknown} and stop,</li>
+								<li>on success, proceed to step 6.</li>
+							</ul>
+						</li>
+						<li><p>Get a parser for the EEP:</p>
+							<ul>
+								<li>on failure: call all listeners registered by
+									<a href="gateway_gateway.gateway.html#onreceivederp1telegramunfamiliar">onReceivedERP1TelegramUnfamiliar</a> with reason
+								{@link ERP1TelegramParsingErrors.EEPUnsupported} and stop,</li>
+								<li>on success, proceed to step 7.</li>
+							</ul>
+						</li>
+						<li><p>Parse the data:</p>
+							<ul>
+								<li>on failure: call all listeners registered by
+									<a href="gateway_gateway.gateway.html#onreceivederp1telegramunfamiliar">onReceivedERP1TelegramUnfamiliar</a> with reason
+								{@link ERP1TelegramParsingErrors.EEPParsingError} and stop,</li>
+								<li>on success, call all listeners registered by <a href="gateway_gateway.gateway.html#onreceivedeepmessage">onReceivedEEPMessage</a>.</li>
+							</ul>
+						</li>
+					</ol>
+					<p>As you can see above, for all types of involved data structures
+						(<a href="esp3_esp3packet.esp3packet.html">ESP3Packet</a>, <a href="erp1_erp1telegram.erp1telegram.html">ERP1Telegram</a>, <a href="../interfaces/eep_eepmessage.eepmessage.html">EEPMessage</a>) the gateway
+						<em>always</em> notifies the sucessful parsing. For the first two, it is possible
+						that further processing fails in which case the respective <em>unfamiliar</em> event
+						will be triggered. This way, you can implement your own functionality either
+						for all data or only for data, which cannot be interpreted (yet) by built-in
+					functionality.</p>
+				</div>
+			</section>
+			<section class="tsd-panel tsd-hierarchy">
+				<h3>Hierarchy</h3>
+				<ul class="tsd-hierarchy">
+					<li>
+						<span class="target">Gateway</span>
+					</li>
+				</ul>
+			</section>
+			<section class="tsd-panel-group tsd-index-group">
+				<h2>Index</h2>
+				<section class="tsd-panel tsd-index-panel">
+					<div class="tsd-index-content">
+						<section class="tsd-index-section ">
+							<h3>Accessors</h3>
+							<ul class="tsd-index-list">
+								<li class="tsd-kind-get-signature tsd-parent-kind-class"><a href="gateway_gateway.gateway.html#islearning" class="tsd-kind-icon">is<wbr>Learning</a></li>
+							</ul>
+						</section>
+						<section class="tsd-index-section ">
+							<h3>Methods</h3>
+							<ul class="tsd-index-list">
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="gateway_gateway.gateway.html#getbaseid" class="tsd-kind-icon">get<wbr>Base<wbr>Id</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="gateway_gateway.gateway.html#getbaseidresetcounter" class="tsd-kind-icon">get<wbr>Base<wbr>IdReset<wbr>Counter</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="gateway_gateway.gateway.html#getchipid" class="tsd-kind-icon">get<wbr>Chip<wbr>Id</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="gateway_gateway.gateway.html#getdeviceinfo" class="tsd-kind-icon">get<wbr>Device<wbr>Info</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="gateway_gateway.gateway.html#geteepparser" class="tsd-kind-icon">getEEPParser</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="gateway_gateway.gateway.html#getsupportedeeps" class="tsd-kind-icon">get<wbr>SupportedEEPs</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="gateway_gateway.gateway.html#haseepparser" class="tsd-kind-icon">hasEEPParser</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="gateway_gateway.gateway.html#isvalidsender" class="tsd-kind-icon">is<wbr>Valid<wbr>Sender</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="gateway_gateway.gateway.html#ondeviceteachin" class="tsd-kind-icon">on<wbr>Device<wbr>Teach<wbr>In</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="gateway_gateway.gateway.html#onreceivedeepmessage" class="tsd-kind-icon">on<wbr>ReceivedEEPMessage</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="gateway_gateway.gateway.html#onreceivederp1telegram" class="tsd-kind-icon">on<wbr>ReceivedERP1<wbr>Telegram</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="gateway_gateway.gateway.html#onreceivederp1telegramunfamiliar" class="tsd-kind-icon">on<wbr>ReceivedERP1<wbr>Telegram<wbr>Unfamiliar</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="gateway_gateway.gateway.html#onreceivedesp3packet" class="tsd-kind-icon">on<wbr>ReceivedESP3<wbr>Packet</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="gateway_gateway.gateway.html#onreceivedesp3packetunfamiliar" class="tsd-kind-icon">on<wbr>ReceivedESP3<wbr>Packet<wbr>Unfamiliar</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="gateway_gateway.gateway.html#onstoplearning" class="tsd-kind-icon">on<wbr>Stop<wbr>Learning</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="gateway_gateway.gateway.html#senderp1telegram" class="tsd-kind-icon">sendERP1<wbr>Telegram</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="gateway_gateway.gateway.html#sendesp3packet" class="tsd-kind-icon">sendESP3<wbr>Packet</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="gateway_gateway.gateway.html#seteepparser" class="tsd-kind-icon">setEEPParser</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="gateway_gateway.gateway.html#startlearning" class="tsd-kind-icon">start<wbr>Learning</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="gateway_gateway.gateway.html#stoplearning" class="tsd-kind-icon">stop<wbr>Learning</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="gateway_gateway.gateway.html#teachdevice" class="tsd-kind-icon">teach<wbr>Device</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-static"><a href="gateway_gateway.gateway.html#connecttoserialport" class="tsd-kind-icon">connect<wbr>ToSerial<wbr>Port</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-static"><a href="gateway_gateway.gateway.html#getavailableserialports" class="tsd-kind-icon">get<wbr>Available<wbr>Serial<wbr>Ports</a></li>
+							</ul>
+						</section>
+					</div>
+				</section>
+			</section>
+			<section class="tsd-panel-group tsd-member-group ">
+				<h2>Accessors</h2>
+				<section class="tsd-panel tsd-member tsd-kind-get-signature tsd-parent-kind-class">
+					<a name="islearning" class="tsd-anchor"></a>
+					<h3>is<wbr>Learning</h3>
+					<ul class="tsd-signatures tsd-kind-get-signature tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon"><span class="tsd-signature-symbol">get</span> isLearning<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">boolean</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Get the status of the gateway&#39;s learn mode.</p>
+								</div>
+							</div>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">boolean</span></h4>
+						</li>
+					</ul>
+				</section>
+			</section>
+			<section class="tsd-panel-group tsd-member-group ">
+				<h2>Methods</h2>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+					<a name="getbaseid" class="tsd-anchor"></a>
+					<h3>get<wbr>Base<wbr>Id</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon">get<wbr>Base<wbr>Id<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="device_deviceid.deviceid.html" class="tsd-signature-type" data-tsd-kind="Class">DeviceId</a><span class="tsd-signature-symbol">&gt;</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Get the gateways&#39;s base ID. This ID can be changed a limited number of
+									times.</p>
+								</div>
+							</div>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="device_deviceid.deviceid.html" class="tsd-signature-type" data-tsd-kind="Class">DeviceId</a><span class="tsd-signature-symbol">&gt;</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+					<a name="getbaseidresetcounter" class="tsd-anchor"></a>
+					<h3>get<wbr>Base<wbr>IdReset<wbr>Counter</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon">get<wbr>Base<wbr>IdReset<wbr>Counter<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">&gt;</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Get the number of available resets for the base ID. The base ID of a
+									TCM310 transceiver can be reset up to 10 times.</p>
+								</div>
+							</div>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">&gt;</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+					<a name="getchipid" class="tsd-anchor"></a>
+					<h3>get<wbr>Chip<wbr>Id</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon">get<wbr>Chip<wbr>Id<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="device_deviceid.deviceid.html" class="tsd-signature-type" data-tsd-kind="Class">DeviceId</a><span class="tsd-signature-symbol">&gt;</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Get the gateway&#39;s chip ID. This ID is the unique EnOcean ID of the
+									connected transceiver and cannot be changed.</p>
+								</div>
+							</div>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="device_deviceid.deviceid.html" class="tsd-signature-type" data-tsd-kind="Class">DeviceId</a><span class="tsd-signature-symbol">&gt;</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+					<a name="getdeviceinfo" class="tsd-anchor"></a>
+					<h3>get<wbr>Device<wbr>Info</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon">get<wbr>Device<wbr>Info<span class="tsd-signature-symbol">(</span>device<span class="tsd-signature-symbol">: </span><a href="device_deviceid.deviceid.html" class="tsd-signature-type" data-tsd-kind="Class">DeviceId</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="device_deviceinfo.deviceinfo.html" class="tsd-signature-type" data-tsd-kind="Class">DeviceInfo</a></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Get the (teach-in) meta data associated to the supplied device.</p>
+								</div>
+							</div>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>device: <a href="device_deviceid.deviceid.html" class="tsd-signature-type" data-tsd-kind="Class">DeviceId</a></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>The device to be queried.</p>
+									</div>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <a href="device_deviceinfo.deviceinfo.html" class="tsd-signature-type" data-tsd-kind="Class">DeviceInfo</a></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+					<a name="geteepparser" class="tsd-anchor"></a>
+					<h3>getEEPParser</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon">getEEPParser<span class="tsd-signature-symbol">(</span>eep<span class="tsd-signature-symbol">: </span><a href="eep_eepid.eepid.html" class="tsd-signature-type" data-tsd-kind="Class">EEPId</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="../interfaces/eep_eepparser.eepparser.html" class="tsd-signature-type" data-tsd-kind="Interface">EEPParser</a></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Get the EEPParser for the supplied EEP.</p>
+								</div>
+							</div>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>eep: <a href="eep_eepid.eepid.html" class="tsd-signature-type" data-tsd-kind="Class">EEPId</a></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>The eep for which the parser is requested.</p>
+									</div>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <a href="../interfaces/eep_eepparser.eepparser.html" class="tsd-signature-type" data-tsd-kind="Interface">EEPParser</a></h4>
+							<p>Returns the EEPParser registered for the supplied EEP or
+							<code>undefined</code> if no parser is found.</p>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+					<a name="getsupportedeeps" class="tsd-anchor"></a>
+					<h3>get<wbr>SupportedEEPs</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon">get<wbr>SupportedEEPs<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="eep_eepid.eepid.html" class="tsd-signature-type" data-tsd-kind="Class">EEPId</a><span class="tsd-signature-symbol">[]</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Get a list of EEPs for which a parser is registered.</p>
+								</div>
+							</div>
+							<h4 class="tsd-returns-title">Returns <a href="eep_eepid.eepid.html" class="tsd-signature-type" data-tsd-kind="Class">EEPId</a><span class="tsd-signature-symbol">[]</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+					<a name="haseepparser" class="tsd-anchor"></a>
+					<h3>hasEEPParser</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon">hasEEPParser<span class="tsd-signature-symbol">(</span>eep<span class="tsd-signature-symbol">: </span><a href="eep_eepid.eepid.html" class="tsd-signature-type" data-tsd-kind="Class">EEPId</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">boolean</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Checks if there is a parser for the given EEP.</p>
+								</div>
+							</div>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>eep: <a href="eep_eepid.eepid.html" class="tsd-signature-type" data-tsd-kind="Class">EEPId</a></h5>
+									<div class="tsd-comment tsd-typography">
+									</div>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">boolean</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+					<a name="isvalidsender" class="tsd-anchor"></a>
+					<h3>is<wbr>Valid<wbr>Sender</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon">is<wbr>Valid<wbr>Sender<span class="tsd-signature-symbol">(</span>sender<span class="tsd-signature-symbol">: </span><a href="device_deviceid.deviceid.html" class="tsd-signature-type" data-tsd-kind="Class">DeviceId</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol">&gt;</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Check if the supplied device id can be used for sending with this gateway.
+									This is the case if (and only if) the supplied id is</p>
+									<ul>
+										<li>the gateway&#39;s chip id,</li>
+										<li>the gateway&#39;s base id or one of the 127 subsequent ids.</li>
+									</ul>
+								</div>
+							</div>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>sender: <a href="device_deviceid.deviceid.html" class="tsd-signature-type" data-tsd-kind="Class">DeviceId</a></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>The device id to be checked.</p>
+									</div>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol">&gt;</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+					<a name="ondeviceteachin" class="tsd-anchor"></a>
+					<h3>on<wbr>Device<wbr>Teach<wbr>In</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon">on<wbr>Device<wbr>Teach<wbr>In<span class="tsd-signature-symbol">(</span>listener<span class="tsd-signature-symbol">: </span><a href="../interfaces/device_deviceteachinlistener.deviceteachinlistener.html" class="tsd-signature-type" data-tsd-kind="Interface">DeviceTeachInListener</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Register a listener to be called when a device was successfully taught in.</p>
+								</div>
+							</div>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>listener: <a href="../interfaces/device_deviceteachinlistener.deviceteachinlistener.html" class="tsd-signature-type" data-tsd-kind="Interface">DeviceTeachInListener</a></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>This function will be called once a device was successfully
+										taught in.</p>
+									</div>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+					<a name="onreceivedeepmessage" class="tsd-anchor"></a>
+					<h3>on<wbr>ReceivedEEPMessage</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon">on<wbr>ReceivedEEPMessage<span class="tsd-signature-symbol">(</span>listener<span class="tsd-signature-symbol">: </span><a href="../interfaces/eep_eepmessagelistener.eepmessagelistener.html" class="tsd-signature-type" data-tsd-kind="Interface">EEPMessageListener</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Register a listener to be called when an EEP message is received.</p>
+								</div>
+							</div>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>listener: <a href="../interfaces/eep_eepmessagelistener.eepmessagelistener.html" class="tsd-signature-type" data-tsd-kind="Interface">EEPMessageListener</a></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>This function will be called whenever an EEP message is
+										received.</p>
+									</div>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+					<a name="onreceivederp1telegram" class="tsd-anchor"></a>
+					<h3>on<wbr>ReceivedERP1<wbr>Telegram</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon">on<wbr>ReceivedERP1<wbr>Telegram<span class="tsd-signature-symbol">(</span>listener<span class="tsd-signature-symbol">: </span><a href="../interfaces/erp1_erp1telegramlistener.erp1telegramlistener.html" class="tsd-signature-type" data-tsd-kind="Interface">ERP1TelegramListener</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Register a listener to be called when an ERP1 telegram is received. The
+										listener will be called <em>before any further internal processing</em> of the
+									ERP1 telegram.</p>
+								</div>
+							</div>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>listener: <a href="../interfaces/erp1_erp1telegramlistener.erp1telegramlistener.html" class="tsd-signature-type" data-tsd-kind="Interface">ERP1TelegramListener</a></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>This function will be called whenever an ERP1 telegram is
+										received.</p>
+									</div>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+					<a name="onreceivederp1telegramunfamiliar" class="tsd-anchor"></a>
+					<h3>on<wbr>ReceivedERP1<wbr>Telegram<wbr>Unfamiliar</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon">on<wbr>ReceivedERP1<wbr>Telegram<wbr>Unfamiliar<span class="tsd-signature-symbol">(</span>listener<span class="tsd-signature-symbol">: </span><a href="../interfaces/erp1_erp1telegramunfamiliarlistener.erp1telegramunfamiliarlistener.html" class="tsd-signature-type" data-tsd-kind="Interface">ERP1TelegramUnfamiliarListener</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Register a listener to be called when a received ERP1 telegram was
+										classified as <em>unfamiliar</em>. This is the case if and only if the further
+									internal processing of the telegram was unsuccessful.</p>
+								</div>
+							</div>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>listener: <a href="../interfaces/erp1_erp1telegramunfamiliarlistener.erp1telegramunfamiliarlistener.html" class="tsd-signature-type" data-tsd-kind="Interface">ERP1TelegramUnfamiliarListener</a></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>This function will be called when when a received ERP1
+										telegram was classified as <em>unfamiliar</em>.</p>
+									</div>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+					<a name="onreceivedesp3packet" class="tsd-anchor"></a>
+					<h3>on<wbr>ReceivedESP3<wbr>Packet</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon">on<wbr>ReceivedESP3<wbr>Packet<span class="tsd-signature-symbol">(</span>listener<span class="tsd-signature-symbol">: </span><a href="../interfaces/esp3_esp3packetlistener.esp3packetlistener.html" class="tsd-signature-type" data-tsd-kind="Interface">ESP3PacketListener</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Register a listener to be called when an ESP3 packet is received. The
+										listener will be called <em>before any further internal processing</em> of the
+									ESP3 packet.</p>
+								</div>
+							</div>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>listener: <a href="../interfaces/esp3_esp3packetlistener.esp3packetlistener.html" class="tsd-signature-type" data-tsd-kind="Interface">ESP3PacketListener</a></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>This function will be called whenever an ESP3 packet is
+										received.</p>
+									</div>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+					<a name="onreceivedesp3packetunfamiliar" class="tsd-anchor"></a>
+					<h3>on<wbr>ReceivedESP3<wbr>Packet<wbr>Unfamiliar</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon">on<wbr>ReceivedESP3<wbr>Packet<wbr>Unfamiliar<span class="tsd-signature-symbol">(</span>listener<span class="tsd-signature-symbol">: </span><a href="../interfaces/esp3_esp3packetunfamiliarlistener.esp3packetunfamiliarlistener.html" class="tsd-signature-type" data-tsd-kind="Interface">ESP3PacketUnfamiliarListener</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Register a listener to be called when a received ESP3 packet was classified
+										as <em>unfamiliar</em>. This is the case if and only if the further internal
+									processing of the packet was unsuccessful.</p>
+								</div>
+							</div>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>listener: <a href="../interfaces/esp3_esp3packetunfamiliarlistener.esp3packetunfamiliarlistener.html" class="tsd-signature-type" data-tsd-kind="Interface">ESP3PacketUnfamiliarListener</a></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>This function will be called when when a received ESP3
+										packet was classified as <em>unfamiliar</em>.</p>
+									</div>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+					<a name="onstoplearning" class="tsd-anchor"></a>
+					<h3>on<wbr>Stop<wbr>Learning</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon">on<wbr>Stop<wbr>Learning<span class="tsd-signature-symbol">(</span>listener<span class="tsd-signature-symbol">: </span><span class="tsd-signature-symbol">(</span>stoppedManually<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol"> =&gt; </span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Register a listener to be called when learning mode ended.</p>
+								</div>
+							</div>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>listener: <span class="tsd-signature-symbol">(</span>stoppedManually<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol"> =&gt; </span><span class="tsd-signature-type">void</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>This function will be called whenever the learning mode
+										ended.</p>
+									</div>
+									<ul class="tsd-parameters">
+										<li class="tsd-parameter-signature">
+											<ul class="tsd-signatures tsd-kind-type-literal">
+												<li class="tsd-signature tsd-kind-icon"><span class="tsd-signature-symbol">(</span>stoppedManually<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+											</ul>
+											<ul class="tsd-descriptions">
+												<li class="tsd-description">
+													<h4 class="tsd-parameters-title">Parameters</h4>
+													<ul class="tsd-parameters">
+														<li>
+															<h5>stoppedManually: <span class="tsd-signature-type">boolean</span></h5>
+														</li>
+													</ul>
+													<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
+												</li>
+											</ul>
+										</li>
+									</ul>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+					<a name="senderp1telegram" class="tsd-anchor"></a>
+					<h3>sendERP1<wbr>Telegram</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon">sendERP1<wbr>Telegram<span class="tsd-signature-symbol">(</span>telegram<span class="tsd-signature-symbol">: </span><a href="erp1_erp1telegram.erp1telegram.html" class="tsd-signature-type" data-tsd-kind="Class">ERP1Telegram</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="../enums/gateway_sendingresults.sendingresults.html" class="tsd-signature-type" data-tsd-kind="Enumeration">SendingResults</a><span class="tsd-signature-symbol">&gt;</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Send a telegram via radio.</p>
+								</div>
+							</div>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>telegram: <a href="erp1_erp1telegram.erp1telegram.html" class="tsd-signature-type" data-tsd-kind="Class">ERP1Telegram</a></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>The telegram to be sent. If this telegram contains an invalid sender address, the telegram will be sent using:</p>
+										<ul>
+											<li>the address found in the knownDevices for the destination, or</li>
+											<li>the chip id.</li>
+										</ul>
+									</div>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="../enums/gateway_sendingresults.sendingresults.html" class="tsd-signature-type" data-tsd-kind="Enumeration">SendingResults</a><span class="tsd-signature-symbol">&gt;</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+					<a name="sendesp3packet" class="tsd-anchor"></a>
+					<h3>sendESP3<wbr>Packet</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon">sendESP3<wbr>Packet<span class="tsd-signature-symbol">(</span>packet<span class="tsd-signature-symbol">: </span><a href="esp3_esp3packet.esp3packet.html" class="tsd-signature-type" data-tsd-kind="Class">ESP3Packet</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="../enums/gateway_sendingresults.sendingresults.html" class="tsd-signature-type" data-tsd-kind="Enumeration">SendingResults</a><span class="tsd-signature-symbol">&gt;</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Send the supplied ESP3 packet. Note: this low level method does not
+									perform any checks/replacements on the sender id for ERP1 telegrams.</p>
+								</div>
+							</div>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>packet: <a href="esp3_esp3packet.esp3packet.html" class="tsd-signature-type" data-tsd-kind="Class">ESP3Packet</a></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>The packet to be sent.</p>
+									</div>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="../enums/gateway_sendingresults.sendingresults.html" class="tsd-signature-type" data-tsd-kind="Enumeration">SendingResults</a><span class="tsd-signature-symbol">&gt;</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+					<a name="seteepparser" class="tsd-anchor"></a>
+					<h3>setEEPParser</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon">setEEPParser<span class="tsd-signature-symbol">(</span>eep<span class="tsd-signature-symbol">: </span><a href="eep_eepid.eepid.html" class="tsd-signature-type" data-tsd-kind="Class">EEPId</a>, parser<span class="tsd-signature-symbol">: </span><a href="../interfaces/eep_eepparser.eepparser.html" class="tsd-signature-type" data-tsd-kind="Interface">EEPParser</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Registers a parser for the given EEP. This parser is used to interpret
+									received telegrams for devices with this EEP.</p>
+								</div>
+							</div>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>eep: <a href="eep_eepid.eepid.html" class="tsd-signature-type" data-tsd-kind="Class">EEPId</a></h5>
+								</li>
+								<li>
+									<h5>parser: <a href="../interfaces/eep_eepparser.eepparser.html" class="tsd-signature-type" data-tsd-kind="Interface">EEPParser</a></h5>
+									<div class="tsd-comment tsd-typography">
+									</div>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+					<a name="startlearning" class="tsd-anchor"></a>
+					<h3>start<wbr>Learning</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon">start<wbr>Learning<span class="tsd-signature-symbol">(</span>timeout<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">number</span>, sender<span class="tsd-signature-symbol">?: </span><a href="device_deviceid.deviceid.html" class="tsd-signature-type" data-tsd-kind="Class">DeviceId</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">&gt;</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Set the gateway into learning mode.</p>
+								</div>
+								<ul>
+									<li>Universal Teach-In (UTE): The gateway will respond to Universal Teach-In (UTE) queries and add the respective device to the list of known devices.</li>
+									<li>4BS teach in: The gateway will interpret 4BS telegrams, whose learn bit
+									is set, and add the device and its EEP to the list of known devices.</li>
+									<li>RPS: Upon receipt of RPS (data) telegrams from yet unknown devices also these will be added to the list of known devices. As RPS communication has no teach-in telegram, the correct EEP has to be added manually afterwards.</li>
+								</ul>
+							</div>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>timeout: <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol"> = 60</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>The timeout (in seconds) after which the learning mode will be disabled automatically.</p>
+									</div>
+								</li>
+								<li>
+									<h5>sender: <a href="device_deviceid.deviceid.html" class="tsd-signature-type" data-tsd-kind="Class">DeviceId</a><span class="tsd-signature-symbol"> = ...</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>The sender ID to be used for the learning process. Can be either the sender&#39;s chip id or one of the 128 consecutive adresses starting at the sender&#39;s base id. Defaults to the sender&#39;s chip id.</p>
+									</div>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">&gt;</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+					<a name="stoplearning" class="tsd-anchor"></a>
+					<h3>stop<wbr>Learning</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon">stop<wbr>Learning<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Manually stop the learning mode.</p>
+								</div>
+							</div>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+					<a name="teachdevice" class="tsd-anchor"></a>
+					<h3>teach<wbr>Device</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon">teach<wbr>Device<span class="tsd-signature-symbol">(</span>device<span class="tsd-signature-symbol">: </span><a href="device_deviceid.deviceid.html" class="tsd-signature-type" data-tsd-kind="Class">DeviceId</a>, eep<span class="tsd-signature-symbol">: </span><a href="eep_eepid.eepid.html" class="tsd-signature-type" data-tsd-kind="Class">EEPId</a>, manufacturer<span class="tsd-signature-symbol">?: </span><a href="../enums/device_manufacturers.manufacturers.html" class="tsd-signature-type" data-tsd-kind="Enumeration">Manufacturers</a>, localId<span class="tsd-signature-symbol">?: </span><a href="device_deviceid.deviceid.html" class="tsd-signature-type" data-tsd-kind="Class">DeviceId</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">&gt;</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Manual teach in of a device. Use with care: might overwrite existing info.</p>
+								</div>
+							</div>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>device: <a href="device_deviceid.deviceid.html" class="tsd-signature-type" data-tsd-kind="Class">DeviceId</a></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>The device id of the device to be taught in.</p>
+									</div>
+								</li>
+								<li>
+									<h5>eep: <a href="eep_eepid.eepid.html" class="tsd-signature-type" data-tsd-kind="Class">EEPId</a></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>The device&#39;s EEP.</p>
+									</div>
+								</li>
+								<li>
+									<h5>manufacturer: <a href="../enums/device_manufacturers.manufacturers.html" class="tsd-signature-type" data-tsd-kind="Enumeration">Manufacturers</a><span class="tsd-signature-symbol"> = ...</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>The device&#39;s manufacturer.</p>
+									</div>
+								</li>
+								<li>
+									<h5>localId: <a href="device_deviceid.deviceid.html" class="tsd-signature-type" data-tsd-kind="Class">DeviceId</a><span class="tsd-signature-symbol"> = ...</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>The local id which shall be used when sending to the device.
+										Defaults to the gateway&#39;s chip id.</p>
+									</div>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">&gt;</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-static">
+					<a name="connecttoserialport" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagStatic">Static</span> connect<wbr>ToSerial<wbr>Port</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-static">
+						<li class="tsd-signature tsd-kind-icon">connect<wbr>ToSerial<wbr>Port<span class="tsd-signature-symbol">(</span>portString<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, deviceInfoMap<span class="tsd-signature-symbol">?: </span><a href="../interfaces/device_deviceinfomap.deviceinfomap.html" class="tsd-signature-type" data-tsd-kind="Interface">DeviceInfoMap</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="gateway_gateway.gateway.html" class="tsd-signature-type" data-tsd-kind="Class">Gateway</a></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Return a new instance using the supplied serial port.</p>
+								</div>
+							</div>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>portString: <span class="tsd-signature-type">string</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>A string identifying the serial port to which the TCM310 module is connected; this might e.g. be &quot;/dev/ttyAMA0&quot; (for the EnOceanPi module on a Raspberry Pi) or &quot;COM3&quot; (for a USB300 module in Windows).</p>
+									</div>
+								</li>
+								<li>
+									<h5>deviceInfoMap: <a href="../interfaces/device_deviceinfomap.deviceinfomap.html" class="tsd-signature-type" data-tsd-kind="Interface">DeviceInfoMap</a><span class="tsd-signature-symbol"> = ...</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>A <a href="../interfaces/device_deviceinfomap.deviceinfomap.html">DeviceInfoMap</a> implementation to be used for storing and retreiving information about the EnOcean devices with which this gateway can communicate. Default is a <a href="device_jsonfiledeviceinfomap.jsonfiledeviceinfomap.html">JSONFileDeviceInfoMap</a> using the default file &#39;.known_enocean_devices&#39;.</p>
+									</div>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <a href="gateway_gateway.gateway.html" class="tsd-signature-type" data-tsd-kind="Class">Gateway</a></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-static">
+					<a name="getavailableserialports" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagStatic">Static</span> get<wbr>Available<wbr>Serial<wbr>Ports</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-static">
+						<li class="tsd-signature tsd-kind-icon">get<wbr>Available<wbr>Serial<wbr>Ports<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">&gt;</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Get a list of all available serial ports. Note that this function returns
+										all ports - it does not check whether a suitable transceiver module is
+									connected to the port!</p>
+								</div>
+							</div>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">&gt;</span></h4>
+						</li>
+					</ul>
+				</section>
+			</section>
+		</div>
+		<div class="col-4 col-menu menu-sticky-wrap menu-highlight">
+			<nav class="tsd-navigation primary">
+				<ul>
+					<li class=" ">
+						<a href="../modules.html">Exports</a>
+					</li>
+					<li class="current tsd-kind-module">
+						<a href="../modules/gateway_gateway.html">gateway/<wbr>Gateway</a>
+					</li>
+				</ul>
+			</nav>
+			<nav class="tsd-navigation secondary menu-sticky">
+				<ul class="before-current">
+				</ul>
+				<ul class="current">
+					<li class="current tsd-kind-class tsd-parent-kind-module">
+						<a href="gateway_gateway.gateway.html" class="tsd-kind-icon">Gateway</a>
+						<ul>
+							<li class=" tsd-kind-get-signature tsd-parent-kind-class">
+								<a href="gateway_gateway.gateway.html#islearning" class="tsd-kind-icon">is<wbr>Learning</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class">
+								<a href="gateway_gateway.gateway.html#getbaseid" class="tsd-kind-icon">get<wbr>Base<wbr>Id</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class">
+								<a href="gateway_gateway.gateway.html#getbaseidresetcounter" class="tsd-kind-icon">get<wbr>Base<wbr>IdReset<wbr>Counter</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class">
+								<a href="gateway_gateway.gateway.html#getchipid" class="tsd-kind-icon">get<wbr>Chip<wbr>Id</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class">
+								<a href="gateway_gateway.gateway.html#getdeviceinfo" class="tsd-kind-icon">get<wbr>Device<wbr>Info</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class">
+								<a href="gateway_gateway.gateway.html#geteepparser" class="tsd-kind-icon">getEEPParser</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class">
+								<a href="gateway_gateway.gateway.html#getsupportedeeps" class="tsd-kind-icon">get<wbr>SupportedEEPs</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class">
+								<a href="gateway_gateway.gateway.html#haseepparser" class="tsd-kind-icon">hasEEPParser</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class">
+								<a href="gateway_gateway.gateway.html#isvalidsender" class="tsd-kind-icon">is<wbr>Valid<wbr>Sender</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class">
+								<a href="gateway_gateway.gateway.html#ondeviceteachin" class="tsd-kind-icon">on<wbr>Device<wbr>Teach<wbr>In</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class">
+								<a href="gateway_gateway.gateway.html#onreceivedeepmessage" class="tsd-kind-icon">on<wbr>ReceivedEEPMessage</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class">
+								<a href="gateway_gateway.gateway.html#onreceivederp1telegram" class="tsd-kind-icon">on<wbr>ReceivedERP1<wbr>Telegram</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class">
+								<a href="gateway_gateway.gateway.html#onreceivederp1telegramunfamiliar" class="tsd-kind-icon">on<wbr>ReceivedERP1<wbr>Telegram<wbr>Unfamiliar</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class">
+								<a href="gateway_gateway.gateway.html#onreceivedesp3packet" class="tsd-kind-icon">on<wbr>ReceivedESP3<wbr>Packet</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class">
+								<a href="gateway_gateway.gateway.html#onreceivedesp3packetunfamiliar" class="tsd-kind-icon">on<wbr>ReceivedESP3<wbr>Packet<wbr>Unfamiliar</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class">
+								<a href="gateway_gateway.gateway.html#onstoplearning" class="tsd-kind-icon">on<wbr>Stop<wbr>Learning</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class">
+								<a href="gateway_gateway.gateway.html#senderp1telegram" class="tsd-kind-icon">sendERP1<wbr>Telegram</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class">
+								<a href="gateway_gateway.gateway.html#sendesp3packet" class="tsd-kind-icon">sendESP3<wbr>Packet</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class">
+								<a href="gateway_gateway.gateway.html#seteepparser" class="tsd-kind-icon">setEEPParser</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class">
+								<a href="gateway_gateway.gateway.html#startlearning" class="tsd-kind-icon">start<wbr>Learning</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class">
+								<a href="gateway_gateway.gateway.html#stoplearning" class="tsd-kind-icon">stop<wbr>Learning</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class">
+								<a href="gateway_gateway.gateway.html#teachdevice" class="tsd-kind-icon">teach<wbr>Device</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-static">
+								<a href="gateway_gateway.gateway.html#connecttoserialport" class="tsd-kind-icon">connect<wbr>ToSerial<wbr>Port</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-static">
+								<a href="gateway_gateway.gateway.html#getavailableserialports" class="tsd-kind-icon">get<wbr>Available<wbr>Serial<wbr>Ports</a>
+							</li>
+						</ul>
+					</li>
+				</ul>
+				<ul class="after-current">
+				</ul>
+			</nav>
+		</div>
+	</div>
+</div>
+<footer class="with-border-bottom">
+	<div class="container">
+		<h2>Legend</h2>
+		<div class="tsd-legend-group">
+			<ul class="tsd-legend">
+				<li class="tsd-kind-class"><span class="tsd-kind-icon">Class</span></li>
+				<li class="tsd-kind-method tsd-parent-kind-class"><span class="tsd-kind-icon">Method</span></li>
+			</ul>
+			<ul class="tsd-legend">
+				<li class="tsd-kind-enum"><span class="tsd-kind-icon">Enumeration</span></li>
+			</ul>
+			<ul class="tsd-legend">
+				<li class="tsd-kind-interface"><span class="tsd-kind-icon">Interface</span></li>
+			</ul>
+			<ul class="tsd-legend">
+				<li class="tsd-kind-method tsd-parent-kind-class tsd-is-static"><span class="tsd-kind-icon">Static method</span></li>
+			</ul>
+		</div>
+	</div>
+</footer>
+<div class="container tsd-generator">
+	<p>Generated using <a href="https://typedoc.org/" target="_blank">TypeDoc</a></p>
+</div>
+<div class="overlay"></div>
+<script src="../assets/js/main.js"></script>
+</body>
+</html>

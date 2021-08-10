@@ -1,0 +1,408 @@
+<!doctype html>
+<html class="default no-js">
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<title>enocean-core - v0.8.0</title>
+	<meta name="description" content="Documentation for enocean-core - v0.8.0">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="stylesheet" href="assets/css/main.css">
+	<script async src="assets/js/search.js" id="search-script"></script>
+</head>
+<body>
+<header>
+	<div class="tsd-page-toolbar">
+		<div class="container">
+			<div class="table-wrap">
+				<div class="table-cell" id="tsd-search" data-index="assets/js/search.json" data-base=".">
+					<div class="field">
+						<label for="tsd-search-field" class="tsd-widget search no-caption">Search</label>
+						<input id="tsd-search-field" type="text" />
+					</div>
+					<ul class="results">
+						<li class="state loading">Preparing search index...</li>
+						<li class="state failure">The search index is not available</li>
+					</ul>
+					<a href="index.html" class="title">enocean-core - v0.8.0</a>
+				</div>
+				<div class="table-cell" id="tsd-widgets">
+					<div id="tsd-filter">
+						<a href="#" class="tsd-widget options no-caption" data-toggle="options">Options</a>
+						<div class="tsd-filter-group">
+							<div class="tsd-select" id="tsd-filter-visibility">
+								<span class="tsd-select-label">All</span>
+								<ul class="tsd-select-list">
+									<li data-value="public">Public</li>
+									<li data-value="protected">Public/Protected</li>
+									<li data-value="private" class="selected">All</li>
+								</ul>
+							</div>
+							<input type="checkbox" id="tsd-filter-inherited" checked />
+							<label class="tsd-widget" for="tsd-filter-inherited">Inherited</label>
+							<input type="checkbox" id="tsd-filter-externals" checked />
+							<label class="tsd-widget" for="tsd-filter-externals">Externals</label>
+						</div>
+					</div>
+					<a href="#" class="tsd-widget menu no-caption" data-toggle="menu">Menu</a>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="tsd-page-title">
+		<div class="container">
+			<h1>enocean-core - v0.8.0</h1>
+		</div>
+	</div>
+</header>
+<div class="container container-main">
+	<div class="row">
+		<div class="col-8 col-content">
+			<div class="tsd-panel tsd-typography">
+				<a href="#enocean-core" id="enocean-core" style="color: inherit; text-decoration: none;">
+					<h1>EnOcean-Core</h1>
+				</a>
+				<p>EnOcean-Core is a <a href="https://www.typescriptlang.org/">TypeScript</a> implementation of (some of) the core functionality of the <a href="https://www.enocean.com/">EnOcean</a> protocol for <a href="https://nodejs.org/">Node.js</a>. This library can be used with a <a href="https://www.enocean.com/en/products/enocean_modules/tcm-310/">TCM310 transceiver module</a> to implement a basic EnOcean gateway. Currently the implemented features are:</p>
+				<ul>
+					<li>sending and receiving of ERP1 telegrams,</li>
+					<li>manual teach-in and automatic learning mode (UTE, 4BS), and</li>
+					<li>automatic interpretation of EEP data of known devices (requires available EEP Parser).</li>
+				</ul>
+				<a href="#table-of-contents" id="table-of-contents" style="color: inherit; text-decoration: none;">
+					<h2>Table of Contents</h2>
+				</a>
+				<ol>
+					<li><a href="#1-description">Description</a><ol>
+							<li><a href="#11-architecture">Architecture</a></li>
+							<li><a href="#12-hardware-requirements">Hardware requirements</a></li>
+							<li><a href="#13-enocean-equipment-profiles-eeps">EnOcean Equipment Profiles (EEPs)</a></li>
+							<li><a href="#14-a-note-on-current-features">A note on current features</a></li>
+							<li><a href="#15-why-another-enocean-library">Why another EnOcean library?</a></li>
+						</ol>
+					</li>
+					<li><a href="#2-installation">Installation</a></li>
+					<li><a href="#3-usage">Usage</a></li>
+					<li><a href="#4-contributing">Contributing</a></li>
+					<li><a href="#5-version-history">Version History</a></li>
+					<li><a href="#6-license">License</a></li>
+					<li><a href="#7-other-legal-notes">Other legal notes</a></li>
+				</ol>
+				<a href="#1-description" id="1-description" style="color: inherit; text-decoration: none;">
+					<h2>1. Description</h2>
+				</a>
+				<p>This library provides a high-level interface (API) to communicate with EnOcean devices in <a href="https://nodejs.org/">Node.js</a>. The EnOcean functionality is encapsulated in such a way that it is easy to use, without having to dig into all the technical details of the underlying EnOcean Serial Protocol. Nevertheless, a basic understanding of EnOcean concepts like</p>
+				<ul>
+					<li>device addressing, </li>
+					<li>equipment profiles (EEP), and</li>
+					<li>teach-in procedures</li>
+				</ul>
+				<p>is required to use this library.</p>
+				<p>The library is developed as part of the author&#39;s efforts to build a modern, open source home automation system (not yet released publicly). Hence the library&#39;s architecture is (of course) built with this application in mind.</p>
+				<a href="#12-hardware-requirements" id="12-hardware-requirements" style="color: inherit; text-decoration: none;">
+					<h3>1.2 Hardware requirements</h3>
+				</a>
+				<p>While most of this library&#39;s data structures are hardware-independent, actual communication with physical EnOcean devices has only been tested with a <a href="https://www.enocean.com/en/products/enocean_modules/tcm-310/">TCM310 transceiver module</a>. To the author&#39;s knowledge, this module is currently commercially available in two formats, namely</p>
+				<ul>
+					<li>in form of a USB stick as <a href="https://www.enocean.com/en/products/enocean_modules/usb-300-oem/">USB 300</a>, or </li>
+					<li>in form of a RaspberryPi hat as <a href="https://www.enocean.com/fileadmin/redaktion/pdf/white_paper/wp_Raspberry_talks_EnOcean.pdf">EnOcean Pi module</a>. </li>
+				</ul>
+				<p>This library has been tested with both variants. </p>
+				<a href="#13-enocean-equipment-profiles-eeps" id="13-enocean-equipment-profiles-eeps" style="color: inherit; text-decoration: none;">
+					<h3>1.3 EnOcean Equipment Profiles (EEPs)</h3>
+				</a>
+				<p>As the name of this library suggests, it only implements core functionality of the EnOcean protocol. In order to actually communicate with devices, it is necessary to separately implement the corresponding EnOcean Equipment Profile (EEP).</p>
+				<p>Currently, parsers for the following EEPs are available (as separate libraries, to be published soon). It is also possible to implement own parsers.</p>
+				<ul>
+					<li>A5-07-03: Occupancy with supply voltage monitor and 10-bit illumination measurement</li>
+					<li>D2-01-0F: Electronic switches and dimmers with energy measurement and local control, type 0x0F</li>
+					<li>D2-05-00: Blinds control for position and angle, type 0x00</li>
+					<li>F6-02-01: Light and blind control - application style 1</li>
+				</ul>
+				<a href="#14-a-note-on-current-features" id="14-a-note-on-current-features" style="color: inherit; text-decoration: none;">
+					<h3>1.4 A note on current features</h3>
+				</a>
+				<p>Internally, communication with the TCM310 and with other EnOcean devices uses the <a href="https://www.enocean.com/fileadmin/redaktion/pdf/tec_docs/EnOceanSerialProtocol3.pdf">EnOcean Serial Protocol 3</a> (ESP3). Note that </p>
+				<ul>
+					<li>the TCM310 chip&#39;s support of the EnOcean Serial Protocol 3 is <a href="https://www.enocean.com/de/produkte/enocean_module/tcm-310/user-manual-pdf/">limited</a>, and also</li>
+					<li>this implementation is still work-in-progress, hence many features of ESP3 (even though supported by TCM310) are not yet available.</li>
+				</ul>
+				<p>If you are missing a feature, feel free to submit a feature request. Alternatively, you can also <a href="##Contributing">contribute</a>.</p>
+				<a href="#15-why-another-enocean-library" id="15-why-another-enocean-library" style="color: inherit; text-decoration: none;">
+					<h3>1.5 Why another EnOcean library?</h3>
+				</a>
+				<p>If you <a href="https://www.npmjs.com/search?q=enocean">search for the term &quot;enocean&quot; on npmjs.com</a>, you will find many packages implementing the EnOcean protocol for Node.js. However, when the author of this library started working on implementing EnOcean functionality in his home automation software in 2020, he identified two major drawbacks:</p>
+				<ul>
+					<li>lack of thorough documentation and</li>
+					<li>lack of TypeScript support.</li>
+				</ul>
+				<p>While this may have changed by now (and might of course also have been just a personal impression at that time), the author decided that the best solution for his problem (i.e. his own home automation software) was to implement this library from scratch using the official EnOcean documentation.</p>
+				<a href="#2-installation" id="2-installation" style="color: inherit; text-decoration: none;">
+					<h2>2. Installation</h2>
+				</a>
+				<p>This library is available as a Node.js-module. You can thus use Node.js&#39; package manager <code>npm</code> to install the latest production version from the <a href="https://npmjs.com">npm registry</a> by executing</p>
+				<pre><code><span style="color: #001080">npm</span><span style="color: #000000"> </span><span style="color: #001080">i</span><span style="color: #000000"> </span><span style="color: #001080">enocean</span><span style="color: #000000">-</span><span style="color: #001080">core</span>
+</code></pre>
+				<p>in your Node.js project&#39;s repository. This will automatically also install the following dependencies.</p>
+				<table>
+					<thead>
+						<tr>
+							<th>Name</th>
+							<th>Description</th>
+							<th>License</th>
+						</tr>
+					</thead>
+					<tbody><tr>
+							<td><a href="https://serialport.io/">Node SerialPort</a></td>
+							<td>Node.js package to access serial ports for Linux, OSX and Windows.</td>
+							<td>MIT</td>
+						</tr>
+						<tr>
+							<td><a href="https://serialport.io/docs/api-parser-inter-byte-timeout/">Node SerialPort&#39;s InterByteTimeoutParser</a></td>
+							<td>Parser for Node SerialPort; emits data if there is a pause between packets</td>
+							<td>MIT</td>
+						</tr>
+						<tr>
+							<td><a href="https://henningkerstan.github.io/byte">Byte</a></td>
+							<td>A class for simple bit manipulation.</td>
+							<td>Apache-2.0</td>
+						</tr>
+				</tbody></table>
+				<a href="#3-usage" id="3-usage" style="color: inherit; text-decoration: none;">
+					<h2>3. Usage</h2>
+				</a>
+				<p>Since this framework is written in TypeScript, you can use it both with TypeScript as well as with plain JavaScript. Below you can find short examples to get you started in both languages. </p>
+				<p>The library also comes with an online <a href="docs/index.html">documentation</a>. A good starting point for further reading is the documentation of the Gateway class. Moreover, as this documentation is generated from source code comments using <a href="https://typedoc.org">TypeDoc</a>, a supported editor (like <a href="https://code.visualstudio.com/">Visual Studio Code</a>) can provide on-the-fly information on functions, parameters, etc..</p>
+				<a href="#31-importing-the-module-and-connecting-a-gateway-prerequisite-for-all-following-examples" id="31-importing-the-module-and-connecting-a-gateway-prerequisite-for-all-following-examples" style="color: inherit; text-decoration: none;">
+					<h3>3.1 Importing the module and connecting a gateway (prerequisite for all following examples)</h3>
+				</a>
+				<p>To use any of the functionality we need to import the module. Moreover, for actual sending/receiving, we need to create a gateway and connect it to a serial port (with a supported transceiver attached, see <a href="#12-hardware-requirements">above</a> for the supported hardware).</p>
+				<pre><code class="language-typescript"><span style="color: #AF00DB">import</span><span style="color: #000000"> </span><span style="color: #0000FF">*</span><span style="color: #000000"> </span><span style="color: #AF00DB">as</span><span style="color: #000000"> </span><span style="color: #001080">EnOcean</span><span style="color: #000000"> </span><span style="color: #AF00DB">from</span><span style="color: #000000"> </span><span style="color: #A31515">&quot;enocean-core&quot;</span>
+<span style="color: #0000FF">const</span><span style="color: #000000"> </span><span style="color: #0070C1">gateway</span><span style="color: #000000"> = </span><span style="color: #001080">EnOcean</span><span style="color: #000000">.</span><span style="color: #001080">Gateway</span><span style="color: #000000">.</span><span style="color: #795E26">connectToSerialPort</span><span style="color: #000000">(</span><span style="color: #A31515">&#039;COM3&#039;</span><span style="color: #000000">)</span>
+</code></pre>
+				<p>Make sure to replace <code>COM3</code> with a valid address/path for your hardware. Note that <code>COM3</code> is a Windows address, on Linux with a EnOcean Pi hat, the address could be e.g. <code>/dev/ttyAMA0</code>.</p>
+				<a href="#32-receiving-telegrams" id="32-receiving-telegrams" style="color: inherit; text-decoration: none;">
+					<h3>3.2 Receiving telegrams</h3>
+				</a>
+				<p>Once we have imported the module and instantiated a gateway, we can use it to listen for all incoming ERP1 telegrams.</p>
+				<pre><code class="language-typescript"><span style="color: #001080">gateway</span><span style="color: #000000">.</span><span style="color: #795E26">onReceivedERP1Telegram</span><span style="color: #000000">((</span><span style="color: #001080">telegram</span><span style="color: #000000">) </span><span style="color: #0000FF">=&gt;</span><span style="color: #000000"> {</span>
+<span style="color: #000000">    </span><span style="color: #001080">console</span><span style="color: #000000">.</span><span style="color: #795E26">log</span><span style="color: #000000">(</span><span style="color: #001080">telegram</span><span style="color: #000000">.</span><span style="color: #795E26">toString</span><span style="color: #000000">())</span>
+<span style="color: #000000">})</span>
+</code></pre>
+				<a href="#33-teachinglearning-devices" id="33-teachinglearning-devices" style="color: inherit; text-decoration: none;">
+					<h3>3.3 Teaching/learning devices</h3>
+				</a>
+				<p>The gateway will automatically interpret any received data as far as possible. Due to the EnOcean protocol, a necessary prerequisite for this is that the gateway knows the EEP of the sending device. There are two possible options to achieve this.</p>
+				<a href="#331-manual-teach-in-of-devices" id="331-manual-teach-in-of-devices" style="color: inherit; text-decoration: none;">
+					<h4>3.3.1 Manual teach-in of devices</h4>
+				</a>
+				<p>To listen and interpret messages, it is sufficient to simply tell the gateway the EEP of a device. Suppose we have a simple rocker switch with ID &#39;12:34:56:78&#39; sending data according to EEP &#39;F6-D2-01&#39; then we can manually teach the gateway using the following code.</p>
+				<pre><code class="language-typescript"><span style="color: #001080">gateway</span><span style="color: #000000">.</span><span style="color: #795E26">teachDevice</span><span style="color: #000000">(</span>
+<span style="color: #000000">    </span><span style="color: #001080">DeviceId</span><span style="color: #000000">.</span><span style="color: #795E26">fromString</span><span style="color: #000000">(</span><span style="color: #A31515">&#039;12:34:56:78&#039;</span><span style="color: #000000">),</span>
+<span style="color: #000000">    </span><span style="color: #001080">EEPId</span><span style="color: #000000">.</span><span style="color: #795E26">fromString</span><span style="color: #000000">(</span><span style="color: #A31515">&#039;F6-D2-01&#039;</span><span style="color: #000000">),</span>
+<span style="color: #000000">)</span>
+</code></pre>
+				<p>Now, each button push on the button will be automatically interpreted as described <a href="#34-receiving-and-interpreting-eep-data-after-successful-teach-in">below</a>. </p>
+				<a href="#332-automatic-teach-in-learning-of-devices-ute-4bs-rps" id="332-automatic-teach-in-learning-of-devices-ute-4bs-rps" style="color: inherit; text-decoration: none;">
+					<h4>3.3.2 Automatic teach-in (learning) of devices (UTE, 4BS, RPS)</h4>
+				</a>
+				<p>While for simple EnOcean sensors (like the above rocker switch) only the gateway needs to know the sensor, more sophisticated devices (in particular actuators) require a mutual teach-in. The usual procedure consists of two steps:</p>
+				<ol>
+					<li><p>Set the gateway in learning mode. This can be done with the following code.</p>
+						<pre><code class="language-typescript"><span style="color: #001080">gateway</span><span style="color: #000000">.</span><span style="color: #795E26">startLearning</span><span style="color: #000000">(</span><span style="color: #098658">120</span><span style="color: #000000">)</span>
+</code></pre>
+						<p>Here, the learning mode will be active for 120 seconds.</p>
+					</li>
+					<li><p>Trigger the teach-in/learning process on the actuator.</p>
+					</li>
+				</ol>
+				<p>If the gateway is able to successfully learn the new device, it will emit an event. Thus to get notified of a successful teach-in, we can register a listener as follows. </p>
+				<pre><code class="language-typescript"><span style="color: #001080">gateway</span><span style="color: #000000">.</span><span style="color: #795E26">onDeviceTeachIn</span><span style="color: #000000">((</span><span style="color: #001080">device</span><span style="color: #000000">, </span><span style="color: #001080">info</span><span style="color: #000000">) </span><span style="color: #0000FF">=&gt;</span><span style="color: #000000"> {</span>
+<span style="color: #000000">    </span><span style="color: #001080">console</span><span style="color: #000000">.</span><span style="color: #795E26">log</span><span style="color: #000000">(</span><span style="color: #A31515">&#039;Teach-in sucessfully completed for device &#039;</span><span style="color: #000000"> + </span><span style="color: #001080">device</span><span style="color: #000000">.</span><span style="color: #795E26">toString</span><span style="color: #000000">())</span>
+<span style="color: #000000">})</span>
+</code></pre>
+				<p>The listener will also be called on manual teach-ins (see above). Currently the gateway only supports the following teach-in procedures:</p>
+				<ul>
+					<li>fully automatic universal teach-in (UTE),</li>
+					<li>fully automatic 4BS teach-in, and</li>
+					<li>semi-automatic RPS teach-in (devices will be added to list of known devices but EEP needs to be added manually afterwards).
+					For the RPS teach-in, no further simplification is possible as RPS devices do not provide their EEPs.</li>
+				</ul>
+				<a href="#34-receiving-and-interpreting-eep-data-after-successful-teach-in" id="34-receiving-and-interpreting-eep-data-after-successful-teach-in" style="color: inherit; text-decoration: none;">
+					<h4>3.4 Receiving and interpreting EEP data after successful teach-in</h4>
+				</a>
+				<p>After a successful teach-in (either manually or automatically), the gateway will try to automatically interpret all incoming messages from these known devices. We can listen to all successfully interpreted message as follows.</p>
+				<pre><code class="language-typescript"><span style="color: #001080">gateway</span><span style="color: #000000">.</span><span style="color: #795E26">onReceivedEEPMessage</span><span style="color: #000000">((</span><span style="color: #001080">message</span><span style="color: #000000">, </span><span style="color: #001080">telegram</span><span style="color: #000000">) </span><span style="color: #0000FF">=&gt;</span><span style="color: #000000"> {</span>
+<span style="color: #000000">    </span><span style="color: #001080">console</span><span style="color: #000000">.</span><span style="color: #795E26">log</span><span style="color: #000000">(</span><span style="color: #001080">message</span><span style="color: #000000">)</span>
+<span style="color: #000000">})</span>
+</code></pre>
+				<p>Note in the example that the listener can also access the telegram in which the message was enclosed. Besides knowing the device and its EEP, a necessity for successful interpretation is the existence of a so called &#39;EEP parser&#39; for the respective EEP. See above for a <a href="#14-supported-eeps">list of supported EEPs</a>, i.e. for EEPs for which a parser is available. </p>
+				<a href="#35-sending-telegrams" id="35-sending-telegrams" style="color: inherit; text-decoration: none;">
+					<h3>3.5 Sending telegrams</h3>
+				</a>
+				<p>Sending raw ERP1 telegrams is simple.</p>
+				<pre><code class="language-typescript"><span style="color: #0000FF">const</span><span style="color: #000000"> </span><span style="color: #0070C1">result</span><span style="color: #000000"> = </span><span style="color: #AF00DB">await</span><span style="color: #000000"> </span><span style="color: #0000FF">this</span><span style="color: #000000">.</span><span style="color: #795E26">sendERP1Telegram</span><span style="color: #000000">(</span><span style="color: #001080">telegram</span><span style="color: #000000">)</span>
+</code></pre>
+				<p>If the returned value is 0, sending succeed. Otherwise the returned number will give the reason why sending failed.</p>
+				<a href="#4-contributing" id="4-contributing" style="color: inherit; text-decoration: none;">
+					<h2>4. Contributing</h2>
+				</a>
+				<p>Contact the main author (<a href="https://henningkerstan.de">Henning Kerstan</a>) if you want to contribute. More details will be available here soon.</p>
+				<p>This project uses <a href="https://semver.org/">semantic versioning</a>. However, despite most of the API being ready, note that since we are still in development (version 0.x.y), anything may yet change at any time. </p>
+				<p>For detailed information on the (minimal) required versions, have a look at the <a href="../package.json">package.json</a>.</p>
+				<a href="#5-version-history" id="5-version-history" style="color: inherit; text-decoration: none;">
+					<h2>5. Version history</h2>
+				</a>
+				<p>As this library has not yet fully matured (version is still &lt; 1.0.0), this is merely a brief version history. A more detailed version history will be available starting with the release of version 1.0.0.</p>
+				<ul>
+					<li>v0.8.0 is the first public version (all prior development took place in a private repository).</li>
+				</ul>
+				<a href="#6-license" id="6-license" style="color: inherit; text-decoration: none;">
+					<h2>6. License</h2>
+				</a>
+				<p>Copyright 2021 <a href="https://henningkerstan.de">Henning Kerstan</a></p>
+				<p>SPDX-License-Identifier: Apache-2.0</p>
+				<a href="#7-other-legal-notes" id="7-other-legal-notes" style="color: inherit; text-decoration: none;">
+					<h2>7. Other legal notes</h2>
+				</a>
+				<p>EnOcean® and the EnOcean logo are registered trademarks of <a href="https://www.enocean.com">EnOcean GmbH</a>. All other product or service names are the property of their respective owners.</p>
+			</div>
+		</div>
+		<div class="col-4 col-menu menu-sticky-wrap menu-highlight">
+			<nav class="tsd-navigation primary">
+				<ul>
+					<li class=" ">
+						<a href="modules.html">Exports</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="modules/device_deviceid.html">device/<wbr>Device<wbr>Id</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="modules/device_deviceinfo.html">device/<wbr>Device<wbr>Info</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="modules/device_deviceinfomap.html">device/<wbr>Device<wbr>Info<wbr>Map</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="modules/device_deviceteachinlistener.html">device/<wbr>Device<wbr>Teach<wbr>InListener</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="modules/device_jsonfiledeviceinfomap.html">device/JSONFile<wbr>Device<wbr>Info<wbr>Map</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="modules/device_manufacturers.html">device/<wbr>Manufacturers</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="modules/eep.html">eep</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="modules/eep_eepid.html">eep/EEPId</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="modules/eep_eepmessage.html">eep/EEPMessage</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="modules/eep_eepmessagelistener.html">eep/EEPMessage<wbr>Listener</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="modules/eep_eepparser.html">eep/EEPParser</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="modules/erp1_erp1telegram.html">erp1/ERP1<wbr>Telegram</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="modules/erp1_erp1telegramlistener.html">erp1/ERP1<wbr>Telegram<wbr>Listener</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="modules/erp1_erp1telegramunfamiliarlistener.html">erp1/ERP1<wbr>Telegram<wbr>Unfamiliar<wbr>Listener</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="modules/erp1_erp1telegramunfamiliarityreasons.html">erp1/ERP1<wbr>Telegram<wbr>Unfamiliarity<wbr>Reasons</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="modules/erp1_rorgs.html">erp1/RORGs</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="modules/esp3_esp3packet.html">esp3/ESP3<wbr>Packet</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="modules/esp3_esp3packetlistener.html">esp3/ESP3<wbr>Packet<wbr>Listener</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="modules/esp3_esp3packettypes.html">esp3/ESP3<wbr>Packet<wbr>Types</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="modules/esp3_esp3packetunfamiliarlistener.html">esp3/ESP3<wbr>Packet<wbr>Unfamiliar<wbr>Listener</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="modules/esp3_esp3packetunfamiliarityreasons.html">esp3/ESP3<wbr>Packet<wbr>Unfamiliarity<wbr>Reasons</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="modules/esp3_common_command_commoncommandcode.html">esp3/common-<wbr>command/<wbr>Common<wbr>Command<wbr>Code</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="modules/esp3_common_command_commoncommandtelegram.html">esp3/common-<wbr>command/<wbr>Common<wbr>Command<wbr>Telegram</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="modules/esp3_response_responsereturncode.html">esp3/response/<wbr>Response<wbr>Return<wbr>Code</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="modules/esp3_response_responsetelegram.html">esp3/response/<wbr>Response<wbr>Telegram</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="modules/esp3_response_versionidentifier.html">esp3/response/<wbr>Version<wbr>Identifier</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="modules/esp3_response_versionresponsetelegram.html">esp3/response/<wbr>Version<wbr>Response<wbr>Telegram</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="modules/gateway_gateway.html">gateway/<wbr>Gateway</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="modules/gateway_sendingresults.html">gateway/<wbr>Sending<wbr>Results</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="modules/gateway_teachinmethods.html">gateway/<wbr>Teach<wbr>InMethods</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="modules/index.html">index</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="modules/ute_utemessage.html">ute/UTEMessage</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="modules/ute_utequeryrequesttype.html">ute/UTEQuery<wbr>Request<wbr>Type</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="modules/ute_uteresponserequesttype.html">ute/UTEResponse<wbr>Request<wbr>Type</a>
+					</li>
+				</ul>
+			</nav>
+			<nav class="tsd-navigation secondary menu-sticky">
+				<ul class="before-current">
+				</ul>
+			</nav>
+		</div>
+	</div>
+</div>
+<footer class="with-border-bottom">
+	<div class="container">
+		<h2>Legend</h2>
+		<div class="tsd-legend-group">
+			<ul class="tsd-legend">
+				<li class="tsd-kind-enum"><span class="tsd-kind-icon">Enumeration</span></li>
+			</ul>
+			<ul class="tsd-legend">
+				<li class="tsd-kind-interface"><span class="tsd-kind-icon">Interface</span></li>
+			</ul>
+			<ul class="tsd-legend">
+				<li class="tsd-kind-class"><span class="tsd-kind-icon">Class</span></li>
+			</ul>
+		</div>
+	</div>
+</footer>
+<div class="container tsd-generator">
+	<p>Generated using <a href="https://typedoc.org/" target="_blank">TypeDoc</a></p>
+</div>
+<div class="overlay"></div>
+<script src="assets/js/main.js"></script>
+</body>
+</html>
