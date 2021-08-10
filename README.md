@@ -78,7 +78,7 @@ Name | Description | License
 ## 3. Usage
 Since this framework is written in TypeScript, you can use it both with TypeScript as well as with plain JavaScript. Below you can find short examples to get you started in both languages. 
 
-The library also comes with an online [documentation](docs/index.html). A good starting point for further reading is the documentation of the Gateway class. Moreover, as this documentation is generated from source code comments using [TypeDoc](https://typedoc.org), a supported editor (like [Visual Studio Code](https://code.visualstudio.com/)) can provide on-the-fly information on functions, parameters, etc..
+The library also comes with an online [documentation](https://henningkerstan.github.io/enocean-core/). A good starting point for further reading is the [documentation of the Gateway class](https://henningkerstan.github.io/enocean-core/classes/gateway_gateway.gateway.html). Moreover, as this documentation is generated from source code comments using [TypeDoc](https://typedoc.org), a supported editor (like [Visual Studio Code](https://code.visualstudio.com/)) can provide on-the-fly information on functions, parameters, etc..
 
 ### 3.1 Importing the module and connecting a gateway (prerequisite for all following examples)
 To use any of the functionality we need to import the module. Moreover, for actual sending/receiving, we need to create a gateway and connect it to a serial port (with a supported transceiver attached, see [above](#12-hardware-requirements) for the supported hardware).
