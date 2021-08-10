@@ -16,10 +16,10 @@
     "build": "npx tsc",
     "all": "npm run build && npm run build && npm run doc",
     "lint": "eslint --ignore-path .gitignore --fix src/**/*.ts spec/**/*.ts",
-    "prepublishOnly": "npm run build",
+    "prepublishOnly": "npm run license-checker && npm run build",
     "version": "node .version.js",
     "prepare": "husky install",
-    "license-checker": "npx license-checker --production --unknown --onlyAllow \"Apache-2.0;MIT;BSD;ISC\""
+    "license-checker": "npx license-checker --summary --production --unknown --onlyAllow \"Apache-2.0;MIT;BSD;ISC\""
   },
   "repository": {
     "type": "git",
