@@ -1,5 +1,4 @@
 {
-  "private": true,
   "name": "enocean-core",
   "version": "0.8.0",
   "description": "A TypeScript implementation of the core functionality of the EnOcean protocol for Node.js.",
