@@ -1,6 +1,6 @@
 {
   "name": "enocean-core",
-  "version": "0.8.1",
+  "version": "0.8.2",
   "description": "A TypeScript implementation of the core functionality of the EnOcean protocol for Node.js.",
   "author": "Henning Kerstan <mail@henningkerstan.de>",
   "license": "Apache-2.0",
