@@ -42,10 +42,10 @@ As the name of this library suggests, it only implements core functionality of t
 
 Currently, parsers for the following EEPs are available (as separate libraries, to be published soon). It is also possible to implement own parsers.
 
-- A5-07-03: Occupancy with supply voltage monitor and 10-bit illumination measurement
-- D2-01-0F: Electronic switches and dimmers with energy measurement and local control, type 0x0F
-- D2-05-00: Blinds control for position and angle, type 0x00
-- F6-02-01: Light and blind control - application style 1
+- [A5-07-03: Occupancy with supply voltage monitor and 10-bit illumination measurement](https://www.npmjs.com/package/@enocean-core/eep-a5-07-03)
+- [D2-01-0F: Electronic switches and dimmers with energy measurement and local control, type 0x0F](https://www.npmjs.com/package/@enocean-core/eep-d2-01-0f)
+- [D2-05-00: Blinds control for position and angle, type 0x00](https://www.npmjs.com/package/@enocean-core/eep-d2-05-00)
+- [F6-02-01: Light and blind control - application style 1](https://www.npmjs.com/package/@enocean-core/eep-f6-02-01)
 
 ### 1.4 A note on current features
 Internally, communication with the TCM310 and with other EnOcean devices uses the [EnOcean Serial Protocol 3](https://www.enocean.com/fileadmin/redaktion/pdf/tec_docs/EnOceanSerialProtocol3.pdf) (ESP3). Note that 
