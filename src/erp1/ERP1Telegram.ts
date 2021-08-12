@@ -102,14 +102,14 @@ export class ERP1Telegram {
     if (packet.optionalData.length !== 7) {
       // must contain subTelNum (1 byte), destination (4 bytes), signal strength (1 byte), security level (1 byte)
       throw new Error(
-        'ESP3Packet is not a valid ERP1 Telegram; optional data is wrong',
+        'ESP3Packet is not a valid ERP1 Telegram; optional data is wrong'
       )
     }
 
     if (packet.data.length < 6) {
       // must contain at least rorg (1 byte), sender id (4 bytes) and status (1 byte)
       throw new Error(
-        'ESP3Packet is not a valid ERP1 Telegram; not enough data',
+        'ESP3Packet is not a valid ERP1 Telegram; not enough data'
       )
     }
 
@@ -161,7 +161,7 @@ export class ERP1Telegram {
     options: { rorg: number; userDataSize?: number } = {
       rorg: RORGs.RPS,
       userDataSize: 1,
-    },
+    }
   ) {
     this.rorg = options.rorg
 
@@ -176,7 +176,7 @@ export class ERP1Telegram {
 
       default:
         this.userData = Buffer.alloc(
-          options.userDataSize ? options.userDataSize : 0,
+          options.userDataSize ? options.userDataSize : 0
         )
     }
   }

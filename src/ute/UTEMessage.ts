@@ -64,7 +64,7 @@ export class UTEMessage {
    */
   toERP1Telegram(
     sender: DeviceId,
-    destination: DeviceId = DeviceId.broadcast,
+    destination: DeviceId = DeviceId.broadcast
   ): ERP1Telegram {
     const buffer = Buffer.alloc(7)
 
@@ -116,7 +116,7 @@ export class UTEMessage {
       console.log(telegram.userData.length)
       console.log(telegram)
       throw new Error(
-        'ERP1 telegram is not a valid UTE telegram; wrong size - must be 7 bytes',
+        'ERP1 telegram is not a valid UTE telegram; wrong size - must be 7 bytes'
       )
     }
 
@@ -152,7 +152,7 @@ export class UTEMessage {
     ute.eep = EEPId.fromTriple(
       telegram.getDB(0),
       telegram.getDB(1),
-      telegram.getDB(2),
+      telegram.getDB(2)
     )
 
     return ute

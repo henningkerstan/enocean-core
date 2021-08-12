@@ -29,7 +29,7 @@ export class CommonCommandTelegram {
   constructor(
     commonCommandCode: CommonCommandCode,
     commonCommandData?: Buffer,
-    optionalData?: Buffer,
+    optionalData?: Buffer
   ) {
     this.commonCommandCode = commonCommandCode
     this.commonCommandData = commonCommandData
@@ -55,7 +55,7 @@ export class CommonCommandTelegram {
     return new ESP3Packet(
       ESP3PacketTypes.CommonCommand,
       data,
-      this.optionalData,
+      this.optionalData
     )
   }
 
@@ -66,7 +66,7 @@ export class CommonCommandTelegram {
 
     if (packet.optionalData.length > 0) {
       throw new Error(
-        'ESP3Packet is not a valid common command; optional data is present',
+        'ESP3Packet is not a valid common command; optional data is present'
       )
     }
 

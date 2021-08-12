@@ -51,7 +51,7 @@ export class ResponseTelegram {
   constructor(
     returnCode: ResponseReturnCode = ResponseReturnCode.Ok,
     responseData: Buffer = Buffer.alloc(0),
-    optionalData: Buffer = Buffer.alloc(0),
+    optionalData: Buffer = Buffer.alloc(0)
   ) {
     this.returnCode = returnCode
     this.responseData = responseData

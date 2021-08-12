@@ -136,7 +136,7 @@ export class Gateway {
    */
   static connectToSerialPort(
     portString: string,
-    deviceInfoMap: DeviceInfoMap = JSONFileDeviceInfoMap.defaultFile(),
+    deviceInfoMap: DeviceInfoMap = JSONFileDeviceInfoMap.defaultFile()
   ): Gateway {
     const gateway = new Gateway()
     gateway.port = new SerialPort(portString, { baudRate: 57600 })
@@ -242,7 +242,7 @@ export class Gateway {
     device: DeviceId,
     eep: EEPId,
     manufacturer: Manufacturers = Manufacturers.Reserved,
-    localId: DeviceId = DeviceId.gatewaySelectsSender,
+    localId: DeviceId = DeviceId.gatewaySelectsSender
   ): Promise<void> {
     const info = new DeviceInfo()
     info.teachInMethod = TeachInMethods.Manual
@@ -347,7 +347,7 @@ export class Gateway {
         console.warn(
           'Ignoring UTE teach in from EnOcean device ' +
             sender.toString() +
-            ' because device is already known.',
+            ' because device is already known.'
         )
         return
       }
@@ -424,7 +424,7 @@ export class Gateway {
         this.emitReceivedERP1TelegramUnfamiliar(
           telegram,
           ERP1TelegramUnfamiliarityReasons.UTEParsingError,
-          error,
+          error
         )
       }
       return
@@ -471,7 +471,7 @@ export class Gateway {
       if (!deviceInfo) {
         this.emitReceivedERP1TelegramUnfamiliar(
           telegram,
-          ERP1TelegramUnfamiliarityReasons.DeviceUnknown,
+          ERP1TelegramUnfamiliarityReasons.DeviceUnknown
         )
         return
       }
@@ -480,7 +480,7 @@ export class Gateway {
       if (!deviceInfo.eep) {
         this.emitReceivedERP1TelegramUnfamiliar(
           telegram,
-          ERP1TelegramUnfamiliarityReasons.EEPUnknown,
+          ERP1TelegramUnfamiliarityReasons.EEPUnknown
         )
         return
       }
@@ -488,7 +488,7 @@ export class Gateway {
       if (!this.hasEEPParser(deviceInfo.eep)) {
         this.emitReceivedERP1TelegramUnfamiliar(
           telegram,
-          ERP1TelegramUnfamiliarityReasons.EEPUnsupported,
+          ERP1TelegramUnfamiliarityReasons.EEPUnsupported
         )
         return
       }
@@ -503,7 +503,7 @@ export class Gateway {
         this.emitReceivedERP1TelegramUnfamiliar(
           telegram,
           ERP1TelegramUnfamiliarityReasons.EEPParsingError,
-          error,
+          error
         )
       }
     }
@@ -521,7 +521,7 @@ export class Gateway {
           this.emitReceivedESP3PacketUnfamiliar(
             packet,
             ESP3PacketUnfamiliarityReasons.ResponseParsingError,
-            error,
+            error
           )
         }
         break
@@ -535,7 +535,7 @@ export class Gateway {
           this.emitReceivedESP3PacketUnfamiliar(
             packet,
             ESP3PacketUnfamiliarityReasons.ERP1ParsingError,
-            error,
+            error
           )
         }
         break
@@ -543,7 +543,7 @@ export class Gateway {
       default:
         this.emitReceivedESP3PacketUnfamiliar(
           packet,
-          ESP3PacketUnfamiliarityReasons.PacketTypeUnsupported,
+          ESP3PacketUnfamiliarityReasons.PacketTypeUnsupported
         )
     }
   }
@@ -607,7 +607,7 @@ export class Gateway {
    *
    */
   onReceivedERP1TelegramUnfamiliar(
-    listener: ERP1TelegramUnfamiliarListener,
+    listener: ERP1TelegramUnfamiliarListener
   ): void {
     this.emitter.on('receivedERP1TelegramUnfamiliar', listener)
   }
@@ -632,7 +632,7 @@ export class Gateway {
   private emitReceivedESP3PacketUnfamiliar(
     packet: ESP3Packet,
     reason: ESP3PacketUnfamiliarityReasons,
-    error?: Error,
+    error?: Error
   ): void {
     this.emitter.emit('receivedESP3PacketUnfamiliar', packet, reason, error)
   }
@@ -644,7 +644,7 @@ export class Gateway {
   private emitReceivedERP1TelegramUnfamiliar(
     telegram: ERP1Telegram,
     reason: ERP1TelegramUnfamiliarityReasons,
-    error?: Error,
+    error?: Error
   ): void {
     this.emitter.emit('receivedERP1TelegramUnfamiliar', telegram, reason, error)
   }
@@ -718,13 +718,13 @@ export class Gateway {
   // todo: Implement and make public
   private async setBaseId(baseId: DeviceId): Promise<void> {
     console.error(
-      'setBaseId not yet implemented - will only check if id is possible',
+      'setBaseId not yet implemented - will only check if id is possible'
     )
 
     if (baseId.toNumber() < 0xff800000 || baseId.toNumber() > 0xffffff80) {
       throw new Error(
         baseId.toString() +
-          ' is not a valid base id. Allowed range is: FF800000 to FFFFFF80.',
+          ' is not a valid base id. Allowed range is: FF800000 to FFFFFF80.'
       )
     }
 
@@ -772,7 +772,7 @@ export class Gateway {
    */
   async startLearning(
     timeout = 60,
-    sender: DeviceId = DeviceId.gatewaySelectsSender,
+    sender: DeviceId = DeviceId.gatewaySelectsSender
   ): Promise<void> {
     if (timeout < 1) {
       throw new Error('cannot learn for < 1 seconds')
@@ -906,7 +906,7 @@ export class Gateway {
   */
   private async sendBuffer(
     buffer: Buffer,
-    waitForResponse = true,
+    waitForResponse = true
   ): Promise<ResponseTelegram | undefined> {
     // wait until previous sending is complete; forced timeout after two seconds
     for (let ms = 10; ms < 2010; ms += 10) {

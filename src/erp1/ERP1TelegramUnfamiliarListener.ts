@@ -32,6 +32,6 @@ export interface ERP1TelegramUnfamiliarListener {
   (
     telegram: ERP1Telegram,
     reason: ERP1TelegramUnfamiliarityReasons,
-    error?: Error,
+    error?: Error
   ): void
 }

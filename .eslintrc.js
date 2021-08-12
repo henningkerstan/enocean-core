@@ -22,7 +22,7 @@ module.exports = {
   },
   extends: [
     'plugin:@typescript-eslint/recommended',
-    'plugin:prettier/recommended', // must be last entry!
+    'prettier'
   ],
   parser: '@typescript-eslint/parser',
   parserOptions: {

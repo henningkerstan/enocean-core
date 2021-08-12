@@ -35,6 +35,7 @@
     "serialport": "^9.2.0"
   },
   "devDependencies": {
+    "@henningkerstan/prettier-config": "^1.0.0",
     "@types/jasmine": "^3.8.2",
     "@types/node": "^16.4.13",
     "@types/serialport": "^8.0.2",
@@ -59,5 +60,6 @@
     "ts-node": "^10.2.0",
     "typedoc": "^0.21.5",
     "typescript": "^4.3.5"
-  }
+  },
+  "prettier": "@henningkerstan/prettier-config"
 }

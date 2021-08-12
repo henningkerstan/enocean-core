@@ -24,5 +24,5 @@ jasmine.getEnv().addReporter(
     spec: {
       displayPending: true,
     },
-  }),
+  })
 )

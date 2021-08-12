@@ -32,6 +32,6 @@ export interface ESP3PacketUnfamiliarListener {
   (
     packet: ESP3Packet,
     reason: ESP3PacketUnfamiliarityReasons,
-    error?: Error,
+    error?: Error
   ): void
 }

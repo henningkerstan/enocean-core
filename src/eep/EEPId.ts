@@ -98,7 +98,7 @@ export class EEPId {
 
     if (func < 0 || func > 0x3f) {
       throw new Error(
-        'FUNC = ' + func + ' is out of range (must be an integer in [0, 0x3F])',
+        'FUNC = ' + func + ' is out of range (must be an integer in [0, 0x3F])'
       )
     }
 

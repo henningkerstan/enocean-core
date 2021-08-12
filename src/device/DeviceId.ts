@@ -67,7 +67,7 @@ export class DeviceId {
 
     if (id > 0xffffffff) {
       throw new Error(
-        'ID out of bounds (must be smaller than 0xFFFFFFFF = 4294967295).',
+        'ID out of bounds (must be smaller than 0xFFFFFFFF = 4294967295).'
       )
     }
 

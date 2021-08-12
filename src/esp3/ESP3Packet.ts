@@ -110,7 +110,7 @@ export class ESP3Packet {
   public constructor(
     packetType: ESP3PacketTypes,
     data: Buffer,
-    optionalData: Buffer,
+    optionalData: Buffer
   ) {
     this.packetType = packetType
     this.data = data
@@ -168,7 +168,7 @@ export class ESP3Packet {
     // constructs a telegram from buffer content, if possible
     if (buffer.length < 8) {
       throw new Error(
-        'Buffer does not contain valid ESP3Packet; not enough data',
+        'Buffer does not contain valid ESP3Packet; not enough data'
       )
     }
 
@@ -176,7 +176,7 @@ export class ESP3Packet {
     const syncByte = buffer.readUIntBE(0, 1)
     if (syncByte !== 0x55) {
       throw new Error(
-        'Buffer does not contain valid ESP3Packet; wrong sync byte (!= 0x55)',
+        'Buffer does not contain valid ESP3Packet; wrong sync byte (!= 0x55)'
       )
     }
 
@@ -191,7 +191,7 @@ export class ESP3Packet {
     const receivedCRC8H = buffer.readUIntBE(5, 1)
     if (calculatedCRC8H !== receivedCRC8H) {
       throw new Error(
-        'Buffer does not contain valid ESP3Packet; CRC8H (header checksum) mismatch',
+        'Buffer does not contain valid ESP3Packet; CRC8H (header checksum) mismatch'
       )
     }
 
@@ -218,7 +218,7 @@ export class ESP3Packet {
     const receivedCRC8D = buffer.readUIntBE(optOffset + optionalLength, 1)
     if (calculatedCRC8D !== receivedCRC8D) {
       throw new Error(
-        'Buffer does not contain valid ESP3Packet; CRC8D (data checksum) mismatch',
+        'Buffer does not contain valid ESP3Packet; CRC8D (data checksum) mismatch'
       )
     }
 
