@@ -20,20 +20,20 @@ import { EEPId } from '../src/eep/EEPId'
 
 describe('An EEPId', () => {
   it('must accept any valid EEP and properly convert to/from string', () => {
-    for (let rorg = 0; rorg <= 255; rorg++) {
-      for (let func = 0; func <= 0x3f; func++) {
-        for (let type = 0; type <= 0x7f; type++) {
-          const eepId = EEPId.fromTriple(rorg, func, type)
-          expect(eepId.rorg).toBe(rorg)
-          expect(eepId.func).toBe(func)
-          expect(eepId.type).toBe(type)
+    for (let i = 0; i <= 5000; i++) {
+      const rorg = Math.round(Math.random() * 255)
+      const func = Math.round(Math.random() * 0x3f)
+      const type = Math.round(Math.random() * 0x7f)
 
-          const eepIdFromString = EEPId.fromString(eepId.toString())
-          expect(eepIdFromString.rorg).toBe(rorg)
-          expect(eepIdFromString.func).toBe(func)
-          expect(eepIdFromString.type).toBe(type)
-        }
-      }
+      const eepId = EEPId.fromTriple(rorg, func, type)
+      expect(eepId.rorg).toBe(rorg)
+      expect(eepId.func).toBe(func)
+      expect(eepId.type).toBe(type)
+
+      const eepIdFromString = EEPId.fromString(eepId.toString())
+      expect(eepIdFromString.rorg).toBe(rorg)
+      expect(eepIdFromString.func).toBe(func)
+      expect(eepIdFromString.type).toBe(type)
     }
   })
 
