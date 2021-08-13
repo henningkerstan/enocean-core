@@ -3,8 +3,8 @@
 <head>
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<title>enocean-core - v0.8.2</title>
-	<meta name="description" content="Documentation for enocean-core - v0.8.2">
+	<title>enocean-core - v0.8.3</title>
+	<meta name="description" content="Documentation for enocean-core - v0.8.3">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="stylesheet" href="assets/css/main.css">
 	<script async src="assets/js/search.js" id="search-script"></script>
@@ -23,7 +23,7 @@
 						<li class="state loading">Preparing search index...</li>
 						<li class="state failure">The search index is not available</li>
 					</ul>
-					<a href="index.html" class="title">enocean-core - v0.8.2</a>
+					<a href="index.html" class="title">enocean-core - v0.8.3</a>
 				</div>
 				<div class="table-cell" id="tsd-widgets">
 					<div id="tsd-filter">
@@ -50,7 +50,7 @@
 	</div>
 	<div class="tsd-page-title">
 		<div class="container">
-			<h1>enocean-core - v0.8.2</h1>
+			<h1>enocean-core - v0.8.3</h1>
 		</div>
 	</div>
 </header>
@@ -112,10 +112,10 @@
 				<p>As the name of this library suggests, it only implements core functionality of the EnOcean protocol. In order to actually communicate with devices, it is necessary to separately implement the corresponding EnOcean Equipment Profile (EEP).</p>
 				<p>Currently, parsers for the following EEPs are available (as separate libraries, to be published soon). It is also possible to implement own parsers.</p>
 				<ul>
-					<li>A5-07-03: Occupancy with supply voltage monitor and 10-bit illumination measurement</li>
-					<li>D2-01-0F: Electronic switches and dimmers with energy measurement and local control, type 0x0F</li>
-					<li>D2-05-00: Blinds control for position and angle, type 0x00</li>
-					<li>F6-02-01: Light and blind control - application style 1</li>
+					<li><a href="https://www.npmjs.com/package/@enocean-core/eep-a5-07-03">A5-07-03: Occupancy with supply voltage monitor and 10-bit illumination measurement</a></li>
+					<li><a href="https://www.npmjs.com/package/@enocean-core/eep-d2-01-0f">D2-01-0F: Electronic switches and dimmers with energy measurement and local control, type 0x0F</a></li>
+					<li><a href="https://www.npmjs.com/package/@enocean-core/eep-d2-05-00">D2-05-00: Blinds control for position and angle, type 0x00</a></li>
+					<li><a href="https://www.npmjs.com/package/@enocean-core/eep-f6-02-01">F6-02-01: Light and blind control - application style 1</a></li>
 				</ul>
 				<a href="#14-a-note-on-current-features" id="14-a-note-on-current-features" style="color: inherit; text-decoration: none;">
 					<h3>1.4 A note on current features</h3>
@@ -251,12 +251,7 @@
 				<a href="#5-version-history" id="5-version-history" style="color: inherit; text-decoration: none;">
 					<h2>5. Version history</h2>
 				</a>
-				<p>As this library has not yet fully matured (version is still &lt; 1.0.0), this is merely a brief version history. A more detailed version history will be available starting with the release of version 1.0.0.</p>
-				<ul>
-					<li>v0.8.2 fixes broken hyperlinks in README.md</li>
-					<li>v0.8.1 is the first version published on npmjs (v0.8.0 still had a private flag in its package.json)</li>
-					<li>v0.8.0 is the first public version (all prior development took place in a private repository).</li>
-				</ul>
+				<p>As this library has not yet fully matured (version is still &lt; 1.0.0), please have a look at the git commit log for a version history.</p>
 				<a href="#6-license" id="6-license" style="color: inherit; text-decoration: none;">
 					<h2>6. License</h2>
 				</a>
@@ -272,109 +267,112 @@
 			<nav class="tsd-navigation primary">
 				<ul>
 					<li class=" ">
-						<a href="modules.html">Exports</a>
+						<a href="modules.html">Modules</a>
 					</li>
 					<li class=" tsd-kind-module">
-						<a href="modules/device_deviceid.html">device/<wbr>Device<wbr>Id</a>
+						<a href="modules/device_DeviceId.html">device/<wbr>Device<wbr>Id</a>
 					</li>
 					<li class=" tsd-kind-module">
-						<a href="modules/device_deviceinfo.html">device/<wbr>Device<wbr>Info</a>
+						<a href="modules/device_DeviceInfo.html">device/<wbr>Device<wbr>Info</a>
 					</li>
 					<li class=" tsd-kind-module">
-						<a href="modules/device_deviceinfomap.html">device/<wbr>Device<wbr>Info<wbr>Map</a>
+						<a href="modules/device_DeviceInfoMap.html">device/<wbr>Device<wbr>Info<wbr>Map</a>
 					</li>
 					<li class=" tsd-kind-module">
-						<a href="modules/device_deviceteachinlistener.html">device/<wbr>Device<wbr>Teach<wbr>InListener</a>
+						<a href="modules/device_DeviceTeachInListener.html">device/<wbr>Device<wbr>Teach<wbr>InListener</a>
 					</li>
 					<li class=" tsd-kind-module">
-						<a href="modules/device_jsonfiledeviceinfomap.html">device/JSONFile<wbr>Device<wbr>Info<wbr>Map</a>
+						<a href="modules/device_JSONFileDeviceInfoMap.html">device/JSONFile<wbr>Device<wbr>Info<wbr>Map</a>
 					</li>
 					<li class=" tsd-kind-module">
-						<a href="modules/device_manufacturers.html">device/<wbr>Manufacturers</a>
+						<a href="modules/device_JSONFileDeviceInfoMapEntry.html">device/JSONFile<wbr>Device<wbr>Info<wbr>Map<wbr>Entry</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="modules/device_Manufacturers.html">device/<wbr>Manufacturers</a>
 					</li>
 					<li class=" tsd-kind-module">
 						<a href="modules/eep.html">eep</a>
 					</li>
 					<li class=" tsd-kind-module">
-						<a href="modules/eep_eepid.html">eep/EEPId</a>
+						<a href="modules/eep_EEPId.html">eep/EEPId</a>
 					</li>
 					<li class=" tsd-kind-module">
-						<a href="modules/eep_eepmessage.html">eep/EEPMessage</a>
+						<a href="modules/eep_EEPMessage.html">eep/EEPMessage</a>
 					</li>
 					<li class=" tsd-kind-module">
-						<a href="modules/eep_eepmessagelistener.html">eep/EEPMessage<wbr>Listener</a>
+						<a href="modules/eep_EEPMessageListener.html">eep/EEPMessage<wbr>Listener</a>
 					</li>
 					<li class=" tsd-kind-module">
-						<a href="modules/eep_eepparser.html">eep/EEPParser</a>
+						<a href="modules/eep_EEPParser.html">eep/EEPParser</a>
 					</li>
 					<li class=" tsd-kind-module">
-						<a href="modules/erp1_erp1telegram.html">erp1/ERP1<wbr>Telegram</a>
+						<a href="modules/erp1_ERP1Telegram.html">erp1/ERP1<wbr>Telegram</a>
 					</li>
 					<li class=" tsd-kind-module">
-						<a href="modules/erp1_erp1telegramlistener.html">erp1/ERP1<wbr>Telegram<wbr>Listener</a>
+						<a href="modules/erp1_ERP1TelegramListener.html">erp1/ERP1<wbr>Telegram<wbr>Listener</a>
 					</li>
 					<li class=" tsd-kind-module">
-						<a href="modules/erp1_erp1telegramunfamiliarlistener.html">erp1/ERP1<wbr>Telegram<wbr>Unfamiliar<wbr>Listener</a>
+						<a href="modules/erp1_ERP1TelegramUnfamiliarListener.html">erp1/ERP1<wbr>Telegram<wbr>Unfamiliar<wbr>Listener</a>
 					</li>
 					<li class=" tsd-kind-module">
-						<a href="modules/erp1_erp1telegramunfamiliarityreasons.html">erp1/ERP1<wbr>Telegram<wbr>Unfamiliarity<wbr>Reasons</a>
+						<a href="modules/erp1_ERP1TelegramUnfamiliarityReasons.html">erp1/ERP1<wbr>Telegram<wbr>Unfamiliarity<wbr>Reasons</a>
 					</li>
 					<li class=" tsd-kind-module">
-						<a href="modules/erp1_rorgs.html">erp1/RORGs</a>
+						<a href="modules/erp1_RORGs.html">erp1/RORGs</a>
 					</li>
 					<li class=" tsd-kind-module">
-						<a href="modules/esp3_esp3packet.html">esp3/ESP3<wbr>Packet</a>
+						<a href="modules/esp3_ESP3Packet.html">esp3/ESP3<wbr>Packet</a>
 					</li>
 					<li class=" tsd-kind-module">
-						<a href="modules/esp3_esp3packetlistener.html">esp3/ESP3<wbr>Packet<wbr>Listener</a>
+						<a href="modules/esp3_ESP3PacketListener.html">esp3/ESP3<wbr>Packet<wbr>Listener</a>
 					</li>
 					<li class=" tsd-kind-module">
-						<a href="modules/esp3_esp3packettypes.html">esp3/ESP3<wbr>Packet<wbr>Types</a>
+						<a href="modules/esp3_ESP3PacketTypes.html">esp3/ESP3<wbr>Packet<wbr>Types</a>
 					</li>
 					<li class=" tsd-kind-module">
-						<a href="modules/esp3_esp3packetunfamiliarlistener.html">esp3/ESP3<wbr>Packet<wbr>Unfamiliar<wbr>Listener</a>
+						<a href="modules/esp3_ESP3PacketUnfamiliarListener.html">esp3/ESP3<wbr>Packet<wbr>Unfamiliar<wbr>Listener</a>
 					</li>
 					<li class=" tsd-kind-module">
-						<a href="modules/esp3_esp3packetunfamiliarityreasons.html">esp3/ESP3<wbr>Packet<wbr>Unfamiliarity<wbr>Reasons</a>
+						<a href="modules/esp3_ESP3PacketUnfamiliarityReasons.html">esp3/ESP3<wbr>Packet<wbr>Unfamiliarity<wbr>Reasons</a>
 					</li>
 					<li class=" tsd-kind-module">
-						<a href="modules/esp3_common_command_commoncommandcode.html">esp3/common-<wbr>command/<wbr>Common<wbr>Command<wbr>Code</a>
+						<a href="modules/esp3_common_command_CommonCommandCode.html">esp3/common-<wbr>command/<wbr>Common<wbr>Command<wbr>Code</a>
 					</li>
 					<li class=" tsd-kind-module">
-						<a href="modules/esp3_common_command_commoncommandtelegram.html">esp3/common-<wbr>command/<wbr>Common<wbr>Command<wbr>Telegram</a>
+						<a href="modules/esp3_common_command_CommonCommandTelegram.html">esp3/common-<wbr>command/<wbr>Common<wbr>Command<wbr>Telegram</a>
 					</li>
 					<li class=" tsd-kind-module">
-						<a href="modules/esp3_response_responsereturncode.html">esp3/response/<wbr>Response<wbr>Return<wbr>Code</a>
+						<a href="modules/esp3_response_ResponseReturnCode.html">esp3/response/<wbr>Response<wbr>Return<wbr>Code</a>
 					</li>
 					<li class=" tsd-kind-module">
-						<a href="modules/esp3_response_responsetelegram.html">esp3/response/<wbr>Response<wbr>Telegram</a>
+						<a href="modules/esp3_response_ResponseTelegram.html">esp3/response/<wbr>Response<wbr>Telegram</a>
 					</li>
 					<li class=" tsd-kind-module">
-						<a href="modules/esp3_response_versionidentifier.html">esp3/response/<wbr>Version<wbr>Identifier</a>
+						<a href="modules/esp3_response_VersionIdentifier.html">esp3/response/<wbr>Version<wbr>Identifier</a>
 					</li>
 					<li class=" tsd-kind-module">
-						<a href="modules/esp3_response_versionresponsetelegram.html">esp3/response/<wbr>Version<wbr>Response<wbr>Telegram</a>
+						<a href="modules/esp3_response_VersionResponseTelegram.html">esp3/response/<wbr>Version<wbr>Response<wbr>Telegram</a>
 					</li>
 					<li class=" tsd-kind-module">
-						<a href="modules/gateway_gateway.html">gateway/<wbr>Gateway</a>
+						<a href="modules/gateway_Gateway.html">gateway/<wbr>Gateway</a>
 					</li>
 					<li class=" tsd-kind-module">
-						<a href="modules/gateway_sendingresults.html">gateway/<wbr>Sending<wbr>Results</a>
+						<a href="modules/gateway_SendingResults.html">gateway/<wbr>Sending<wbr>Results</a>
 					</li>
 					<li class=" tsd-kind-module">
-						<a href="modules/gateway_teachinmethods.html">gateway/<wbr>Teach<wbr>InMethods</a>
+						<a href="modules/gateway_TeachInMethods.html">gateway/<wbr>Teach<wbr>InMethods</a>
 					</li>
 					<li class=" tsd-kind-module">
 						<a href="modules/index.html">index</a>
 					</li>
 					<li class=" tsd-kind-module">
-						<a href="modules/ute_utemessage.html">ute/UTEMessage</a>
+						<a href="modules/ute_UTEMessage.html">ute/UTEMessage</a>
 					</li>
 					<li class=" tsd-kind-module">
-						<a href="modules/ute_utequeryrequesttype.html">ute/UTEQuery<wbr>Request<wbr>Type</a>
+						<a href="modules/ute_UTEQueryRequestType.html">ute/UTEQuery<wbr>Request<wbr>Type</a>
 					</li>
 					<li class=" tsd-kind-module">
-						<a href="modules/ute_uteresponserequesttype.html">ute/UTEResponse<wbr>Request<wbr>Type</a>
+						<a href="modules/ute_UTEResponseRequestType.html">ute/UTEResponse<wbr>Request<wbr>Type</a>
 					</li>
 				</ul>
 			</nav>
