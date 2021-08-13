@@ -182,7 +182,7 @@ export class UTEMessage {
     }
 
     msg += '  eep:               ' + this.eep.toString() + '\n'
-    msg += '  channels:          ' + this.channels + '\n'
+    msg += '  channels:          ' + this.channels.toString() + '\n'
 
     msg +=
       '  communication:     ' +
@@ -192,7 +192,7 @@ export class UTEMessage {
       '  manufacturer:      ' +
       Manufacturers[this.manufacturerId] +
       ' (    ' +
-      this.manufacturerId +
+      this.manufacturerId.toString() +
       ')    ' +
       '\n'
     msg += '}'

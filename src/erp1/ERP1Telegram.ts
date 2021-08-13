@@ -213,11 +213,11 @@ export class ERP1Telegram {
     if (this.signalStrength === 0xff) {
       msg += '<max>\n'
     } else {
-      msg += '-' + this.signalStrength + ' dBm\n'
+      msg += '-' + this.signalStrength.toString() + ' dBm\n'
     }
 
-    msg += '  security lvl.: ' + this.securityLevel + '\n'
-    msg += '  status:        ' + this.status + '\n'
+    msg += '  security lvl.: ' + this.securityLevel.toString() + '\n'
+    msg += '  status:        ' + this.status.toString() + '\n'
     msg += '  user data:     ' + this.userData.toString('hex') + '\n'
     msg += '}'
     return msg
@@ -252,7 +252,9 @@ export class ERP1Telegram {
     // determine the size of the user data
     const maxId = this.userData.length - 1
     if (byteId > maxId) {
-      throw new Error('byteId must be less than or equal to ' + maxId)
+      throw new Error(
+        'byteId must be less than or equal to ' + maxId.toString()
+      )
     }
 
     return this.userData.readUInt8(maxId - byteId)
@@ -275,7 +277,9 @@ export class ERP1Telegram {
     // determine the maxId of the user data
     const maxId = this.userData.length - 1
     if (byteId > maxId) {
-      throw new Error('byteId must be less than or equal to ' + maxId)
+      throw new Error(
+        'byteId must be less than or equal to ' + maxId.toString()
+      )
     }
 
     this.userData.writeUInt8(value, maxId - byteId)

@@ -19,7 +19,7 @@ import SerialPort from 'serialport'
 import { DeviceId } from '../device/DeviceId'
 
 /** @internal */
-// eslint-disable-next-line @typescript-eslint/no-var-requires
+// eslint-disable-next-line @typescript-eslint/no-var-requires, @typescript-eslint/no-unsafe-assignment
 const InterByteTimeout = require('@serialport/parser-inter-byte-timeout')
 
 import { RORGs } from '../erp1/RORGs'
@@ -140,7 +140,9 @@ export class Gateway {
   ): Gateway {
     const gateway = new Gateway()
     gateway.port = new SerialPort(portString, { baudRate: 57600 })
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call
     gateway.parser = gateway.port.pipe(new InterByteTimeout({ interval: 50 }))
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
     gateway.parser.on('data', (data: Buffer) => {
       gateway.parseData(data)
     })
@@ -409,7 +411,7 @@ export class Gateway {
     }
 
     // handle query
-    this.handleUTEQuery(message, sender)
+    void this.handleUTEQuery(message, sender)
   }
 
   private parseERP1Telegram(telegram: ERP1Telegram) {
@@ -735,6 +737,8 @@ export class Gateway {
     // reset internal cache
     this.baseId = undefined
     this.baseIdResetCounter = undefined
+
+    return Promise.resolve()
   }
 
   private versionInfo: VersionResponseTelegram = undefined

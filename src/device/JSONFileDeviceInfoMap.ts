@@ -21,6 +21,7 @@ import { DeviceId } from './DeviceId'
 import * as fs from 'fs'
 import * as path from 'path'
 import { EEPId } from '../eep/EEPId'
+import { JSONFileDeviceInfoMapEntry } from './JSONFileDeviceInfoMapEntry'
 
 /**
  * This is a minimal, straightforward file based implementation of the {@link DeviceInfoMap} interface using JSON serialization. There is no added functionality, the functions correspond exactly to the interface {@link DeviceInfoMap}.
@@ -41,10 +42,12 @@ export class JSONFileDeviceInfoMap implements DeviceInfoMap {
   private constructor() {
     if (fs.existsSync(this.jsonFile)) {
       const fileContent = fs.readFileSync(this.jsonFile, { encoding: 'utf8' })
-      const devices = new Map(JSON.parse(fileContent))
+      const devices = new Map<string, JSONFileDeviceInfoMapEntry>(
+        JSON.parse(fileContent)
+      )
 
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      devices.forEach((value: any, key: any) => {
+      devices.forEach((value: JSONFileDeviceInfoMapEntry, key: any) => {
         // TODO: improve! (not use any etc.)
         const info = new DeviceInfo()
         info.deviceId = DeviceId.fromString(value.deviceId)

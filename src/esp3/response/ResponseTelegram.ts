@@ -105,7 +105,7 @@ export class ResponseTelegram {
         return 'currently all internal buffers are used (RET_NO_FREE_BUFFER)'
 
       default:
-        return 'unknown code ' + this.returnCode
+        return 'unknown code ' + this.returnCode.toString()
     }
   }
 }

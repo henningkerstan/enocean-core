@@ -16,7 +16,7 @@
     "build": "npx tsc",
     "cleanBuild": "rimraf ./lib/",
     "all": "npm run build && npm run build && npm run doc",
-    "lint": "eslint --ignore-path .gitignore --fix src/**/*.ts spec/**/*.ts",
+    "lint": "eslint --ignore-path .gitignore --fix src/**/*.ts",
     "prepublishOnly": "npm run license-checker && npm run cleanBuild && npm run build",
     "version": "node .version.js",
     "prepare": "husky install",
@@ -35,6 +35,7 @@
     "serialport": "^9.2.0"
   },
   "devDependencies": {
+    "@henningkerstan/eslint-config": "^0.0.1",
     "@henningkerstan/prettier-config": "^1.0.0",
     "@types/jasmine": "^3.8.2",
     "@types/node": "^16.4.13",

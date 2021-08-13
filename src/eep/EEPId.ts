@@ -98,7 +98,9 @@ export class EEPId {
 
     if (func < 0 || func > 0x3f) {
       throw new Error(
-        'FUNC = ' + func + ' is out of range (must be an integer in [0, 0x3F])'
+        'FUNC = ' +
+          func.toString() +
+          ' is out of range (must be an integer in [0, 0x3F])'
       )
     }
 
@@ -200,9 +202,9 @@ export class EEPId {
         return 'F6-02 Rocker Switch, 2 Rocker - type unknown'
 
       case 3: // rocker switch, 4 rocker
-
+        return 'rocker switch, 4 rocker' // TODO
       case 4: // position switch, home and office application
-
+        return 'position switch, home and office application' // TODO
       case 5: // detectors
         if (this.type === 1) {
           return 'Liquid Leakage Sensor (mechanic harvester)'

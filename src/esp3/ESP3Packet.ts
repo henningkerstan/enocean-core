@@ -202,7 +202,7 @@ export class ESP3Packet {
         'Buffer does not contain valid ESP3Packet; size mismatch (calc: ' +
         calculatedPacketSize.toString() +
         ', actual: ' +
-        buffer.length +
+        buffer.length.toString() +
         ')'
       throw new Error(msg)
     }
