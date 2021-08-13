@@ -158,11 +158,8 @@ This project uses [semantic versioning](https://semver.org/). However, despite m
 For detailed information on the (minimal) required versions, have a look at the [package.json](https://github.com/henningkerstan/enocean-core/blob/main/package.json).
 
 ## 5. Version history
-As this library has not yet fully matured (version is still < 1.0.0), this is merely a brief version history. A more detailed version history will be available starting with the release of version 1.0.0.
+As this library has not yet fully matured (version is still < 1.0.0), please have a look at the git commit log for a version history.
 
-- v0.8.2 fixes broken hyperlinks in README.md
-- v0.8.1 is the first version published on npmjs (v0.8.0 still had a private flag in its package.json)
-- v0.8.0 is the first public version (all prior development took place in a private repository).
 
 ## 6. License
 Copyright 2021 [Henning Kerstan](https://henningkerstan.de)
