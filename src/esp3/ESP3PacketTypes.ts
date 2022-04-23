@@ -29,6 +29,6 @@ export enum ESP3PacketTypes {
   RadioERP2 = 10,
   ConfigCommand = 11,
   CommandAccepted = 12,
-  Radio802_15_5 = 16,
-  Command2_4 = 17,
+  Radio802155 = 16,
+  Command24 = 17,
 }

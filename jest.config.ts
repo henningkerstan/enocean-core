@@ -15,10 +15,10 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import type {Config} from '@jest/types';
+import type { Config } from '@jest/types'
 const config: Config.InitialOptions = {
   verbose: true,
   preset: 'ts-jest',
-  testEnvironment: 'node'
-};
-export default config;
+  testEnvironment: 'node',
+}
+export default config

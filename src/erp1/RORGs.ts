@@ -38,25 +38,25 @@ export enum RORGs {
   ADT = 0xa6,
 
   /** SMART ACK learn request */
-  SM_LRN_REQ = 0xc6,
+  SmartAckLearnRequest = 0xc6,
 
   /** SMART ACK learn answer */
-  SM_LRN_ANS = 0xc7,
+  SmartAckLearnAnswer = 0xc7,
 
   /** SMART ACK reclaim */
-  SM_REC = 0xa7,
+  SmartAckReclaim = 0xa7,
 
   /** Remote management */
-  SYS_EX = 0xc5,
+  SysEx = 0xc5,
 
   /** Secure telegram */
   SEC = 0x30,
 
   /** Secure telegram with RORG encapsulation */
-  SEC_ENCAPS = 0x31,
+  SecEncaps = 0x31,
 
   /** Maintenance security message */
-  SEC_MAN = 0x34,
+  SecMan = 0x34,
 
   /** Signal telegram */
   SIGNAL = 0xd0,

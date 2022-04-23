@@ -22,6 +22,8 @@
  *
  */
 //
+
+/* eslint-disable @typescript-eslint/naming-convention */
 export enum Manufacturers {
   Reserved = 0x000,
   PEHA = 0x001,
@@ -144,3 +146,4 @@ export enum Manufacturers {
   REHAU = 0x074,
   MULTI_USER_MANUFACTURER = 0x7ff,
 }
+/* eslint-enable @typescript-eslint/naming-convention */

@@ -42,7 +42,9 @@ export class JSONFileDeviceInfoMap implements DeviceInfoMap {
   private constructor() {
     if (fs.existsSync(this.jsonFile)) {
       const fileContent = fs.readFileSync(this.jsonFile, { encoding: 'utf8' })
+
       const devices = new Map<string, JSONFileDeviceInfoMapEntry>(
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
         JSON.parse(fileContent)
       )
 
@@ -56,6 +58,7 @@ export class JSONFileDeviceInfoMap implements DeviceInfoMap {
         info.localId = DeviceId.fromString(value.localId)
         info.manufacturer = value.manufacturer
         info.teachInMethod = value.teachInMethod
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
         this.devices.set(DeviceId.fromString(key).toString(), info)
       })
     } else {

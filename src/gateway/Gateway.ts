@@ -19,7 +19,7 @@ import { SerialPort } from 'serialport'
 import { DeviceId } from '../device/DeviceId'
 
 /** @internal */
-// eslint-disable-next-line @typescript-eslint/no-var-requires, @typescript-eslint/no-unsafe-assignment
+// eslint-disable-next-line @typescript-eslint/no-var-requires, @typescript-eslint/no-unsafe-assignment, @typescript-eslint/naming-convention
 const InterByteTimeout = require('@serialport/parser-inter-byte-timeout')
 
 import { RORGs } from '../erp1/RORGs'
@@ -634,6 +634,7 @@ export class Gateway {
   private emitReceivedESP3PacketUnfamiliar(
     packet: ESP3Packet,
     reason: ESP3PacketUnfamiliarityReasons,
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     error?: any
   ): void {
     this.emitter.emit('receivedESP3PacketUnfamiliar', packet, reason, error)
@@ -646,6 +647,7 @@ export class Gateway {
   private emitReceivedERP1TelegramUnfamiliar(
     telegram: ERP1Telegram,
     reason: ERP1TelegramUnfamiliarityReasons,
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     error?: any
   ): void {
     this.emitter.emit('receivedERP1TelegramUnfamiliar', telegram, reason, error)
