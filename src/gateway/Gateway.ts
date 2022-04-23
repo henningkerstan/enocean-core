@@ -15,7 +15,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import SerialPort from 'serialport'
+import { SerialPort } from 'serialport'
 import { DeviceId } from '../device/DeviceId'
 
 /** @internal */
@@ -139,7 +139,7 @@ export class Gateway {
     deviceInfoMap: DeviceInfoMap = JSONFileDeviceInfoMap.defaultFile()
   ): Gateway {
     const gateway = new Gateway()
-    gateway.port = new SerialPort(portString, { baudRate: 57600 })
+    gateway.port = new SerialPort({ path: portString, baudRate: 57600 })
     // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call
     gateway.parser = gateway.port.pipe(new InterByteTimeout({ interval: 50 }))
     // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
@@ -634,7 +634,7 @@ export class Gateway {
   private emitReceivedESP3PacketUnfamiliar(
     packet: ESP3Packet,
     reason: ESP3PacketUnfamiliarityReasons,
-    error?: Error
+    error?: any
   ): void {
     this.emitter.emit('receivedESP3PacketUnfamiliar', packet, reason, error)
   }
@@ -646,7 +646,7 @@ export class Gateway {
   private emitReceivedERP1TelegramUnfamiliar(
     telegram: ERP1Telegram,
     reason: ERP1TelegramUnfamiliarityReasons,
-    error?: Error
+    error?: any
   ): void {
     this.emitter.emit('receivedERP1TelegramUnfamiliar', telegram, reason, error)
   }

@@ -1,7 +1,7 @@
 // Project: enocean-core
-// File: helpers.js
+// File: jest.config.ts
 //
-// Copyright 2021 Henning Kerstan
+// Copyright 2022 Henning Kerstan
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -15,14 +15,10 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-const SpecReporter = require('jasmine-spec-reporter').SpecReporter
-
-jasmine.getEnv().clearReporters() // remove default reporter logs
-jasmine.getEnv().addReporter(
-  new SpecReporter({
-    // add jasmine-spec-reporter
-    spec: {
-      displayPending: true,
-    },
-  })
-)
+import type {Config} from '@jest/types';
+const config: Config.InitialOptions = {
+  verbose: true,
+  preset: 'ts-jest',
+  testEnvironment: 'node'
+};
+export default config;
