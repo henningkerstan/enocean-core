@@ -1,4 +1,4 @@
-// Project: @henningkerstan/byte
+// Project: enocean-core
 // File: .version.js 
 // 
 // Copyright 2021 Henning Kerstan
